@@ -64,34 +64,22 @@ const MyPageMain = () => {
           >
             <div style={{ marginLeft: "35%" }}>{userName}</div>
             <div style={{ marginLeft: "35%" }}>{userId}</div>
-            <button
-              class="mypage-button-font"
-              style={{
-                background: "#203864",
-                color: "white",
-                marginLeft: "35%",
-                marginTop: "10px",
-                width: "120%",
-                borderRadius: "5px",
-              }}
-            >
-              <Link to="/mypage/profile">프로필 편집</Link>
-            </button>
           </div>
           <div style={{ marginTop: "70px" }}>
             <ul class="icon-wrapper">
               <li class="icon">
-                <Link to="/mypage/myphoto">
+                <Link to="/mypage/profile">
                   <img
                     alt=""
                     src={require("../../img/gallery.png").default}
                     style={{
                       marginLeft: "20%",
                       width: "55%",
+                      maxWidth: "100px",
                       display: "block",
                     }}
                   />
-                  나의 사진
+                  프로필 편집
                 </Link>
               </li>
               <li class="icon">
@@ -102,6 +90,7 @@ const MyPageMain = () => {
                     style={{
                       marginLeft: "20%",
                       width: "60%",
+                      maxWidth: "100px",
                       display: "block",
                     }}
                   />
@@ -115,6 +104,7 @@ const MyPageMain = () => {
                     src={require("../../img/records.png").default}
                     style={{
                       marginLeft: "20%",
+                      maxWidth: "100px",
                       width: "53%",
                       display: "block",
                     }}
