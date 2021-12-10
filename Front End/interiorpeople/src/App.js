@@ -16,7 +16,6 @@ import Support from "./Support";
 import MyPage from "./myPage/pages/MyPage";
 import MyPageMain from "./myPage/pages/MyPageMain";
 import Profile from "./myPage/pages/Profile";
-import MyPhoto from "./myPage/pages/MyPhoto";
 import Bookmark from "./myPage/pages/Bookmark";
 import History from "./myPage/pages/History";
 
@@ -60,7 +59,6 @@ function App() {
           <Route path="/mypage/*" element={<MyPage />}>
             <Route path="" element={<MyPageMain />} />
             <Route path="profile" element={<Profile />} />
-            <Route path="myphoto" element={<MyPhoto />} />
             <Route path="bookmark" element={<Bookmark />} />
             <Route path="history" element={<History />} />
           </Route>

@@ -17,6 +17,7 @@ const { isLoggedIn } = require('../middlewares/authentication')
 /** multer 및 AWS 관련 */
 const { multerConfig } = require('../middlewares/multerConfig')
 const { s3 } = require('../aws')
+const interiorImage = require('../schemas/interiorImage')
 
 const uploadProfilePhoto = multerConfig('profilePhoto_img')
 
@@ -37,15 +38,39 @@ myPageRouter.get('/', isLoggedIn, async (req, res) => {
   }
 })
 
-/** 나의 사진 페이지 */
-// TODO : 나의 사진
-// eslint-disable-next-line no-unused-vars
-myPageRouter.get('/myphoto', isLoggedIn, async (req, res) => {})
-
 /** 추천 기록 페이지 */
-// TODO : 추천 기록
-// eslint-disable-next-line no-unused-vars
-myPageRouter.get('/photo', isLoggedIn, async (req, res) => {})
+myPageRouter.get('/history', isLoggedIn, async (req, res) => {
+  const { lastRecommendId } = req.query
+  try {
+    // @ts-ignore
+    const userId = req.user.id
+
+    // 유효하지 않은 포스트의 id인 경우
+    if (lastRecommendId && !mongoose.isValidObjectId(lastRecommendId)) {
+      throw new Error('잘못된 접근입니다.')
+    }
+    // @ts-ignore
+    if (!userId) {
+      throw new Error('권한이 없습니다.')
+    }
+    // @ts-ignore
+    const Recommends = await interiorImage
+      .find(
+        lastRecommendId ? { user_id: userId, _id: { $lt: lastRecommendId } } : { user_id: userId }
+      )
+      .sort({ _id: -1 })
+      .limit(20)
+    // @ts-ignore
+    if (Recommends) {
+      res.status(200).json(Recommends)
+    } else {
+      res.status(200).json([])
+    }
+  } catch (err) {
+    // @ts-ignore
+    res.status(400).json({ message: err.message })
+  }
+})
 
 /** 북마크 페이지 */
 myPageRouter.get('/bookmark', isLoggedIn, async (req, res) => {
