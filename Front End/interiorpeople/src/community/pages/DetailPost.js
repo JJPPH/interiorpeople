@@ -264,13 +264,13 @@ const DetailPost = () => {
       ) : (
         <div>
           <div>
-            <button style={{ float: "right" }} onClick={followSubmit}>
+            <button style={{ width: "8%", marginTop: "20px", marginLeft: "15%", background: "#203864", color: "white", borderRadius: "5px", border: 0, outline: 0 }} onClick={followSubmit}>
               {hasFollowed !== null && (hasFollowed ? "팔로잉 취소" : "팔로우")}
             </button>
-            <button style={{ float: "right" }} onClick={likeSubmit}>
+            <button style={{ width: "8%", marginLeft: "2px", background: "#203864", color: "white", borderRadius: "5px", border: 0, outline: 0 }} onClick={likeSubmit}>
               {hasLiked !== null && (hasLiked ? "좋아요 취소" : "좋아요")}
             </button>
-            <button style={{ float: "right" }} onClick={bookmarkSubmit}>
+            <button style={{ width: "8%", marginLeft: "2px", background: "#203864", color: "white", borderRadius: "5px", border: 0, outline: 0 }} onClick={bookmarkSubmit}>
               {hasBookmarked !== null &&
                 (hasBookmarked ? "북마크 취소" : "북마크")}
             </button>
@@ -289,7 +289,7 @@ const DetailPost = () => {
                   setWritedComment(e.target.value);
                 }}
               />
-            <button class="comment-button" type="submit">댓글 달기</button>
+            <button class="comment-button" type="submit">등록</button>
             </div>
           </div>
         </form>

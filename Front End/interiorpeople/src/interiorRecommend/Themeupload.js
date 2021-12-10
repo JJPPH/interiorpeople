@@ -72,7 +72,7 @@ function Themeupload() {
     <div>
       <form onSubmit={onSubmit}>
         <div class="explanation-group" style={{ marginTop: "20px" }}>
-          <div class="small-black-text">
+          <div class="small-black-text" style={{ marginBottom : "20px"}}>
             원하는 테마 이미지를 업로드해주세요
             <br />
             (이미지가 없을 시 다음으로 넘어가주세요)

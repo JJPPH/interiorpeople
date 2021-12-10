@@ -68,7 +68,7 @@ function Upload() {
       {loading ? (
         <div>
           <Flex>
-            <h2>이미지 분석중입니다...</h2>
+            <h3>이미지 분석중입니다...</h3>
             <br />
             <PuffLoader size="300" color="black" radius="8" />
           </Flex>

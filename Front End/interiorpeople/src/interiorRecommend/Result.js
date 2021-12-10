@@ -49,8 +49,7 @@ function Result() {
         <div>
           <Flex style={{ textAlign: "center" }}>
             <h2>
-              이미지를 변환하고
-              <br /> 있습니다...
+              이미지를 변환하고 있습니다...
             </h2>
             <br />
             <PuffLoader size="300" color="black" radius="8" />
@@ -65,8 +64,8 @@ function Result() {
             flexDirection: "column",
           }}
         >
-          <h2 style={{ alignContent: "center", width: "90%" }}>변환 결과</h2>
-          {style === undefined ? <></> : <h3>원본 사진</h3>}
+          <div style={{ marginLeft: "50%", width: "75%", fontWeight: "bolder", fontSize: "27px", marginTop: "20px"  }}>변환 결과</div>
+          {style === undefined ? <></> : <h3 style={{marginTop: "20px"}}>원본 사진</h3>}
           <br />
           {originalImageUrl !== undefined ? (
             <img
@@ -82,8 +81,8 @@ function Result() {
           {colorStyle === undefined ? (
             <></>
           ) : colorStyle ? (
-            <div style={{ textAlign: "center" }}>
-              <h3 style={{ display: "inline" }}>업로드하신 </h3>
+            <div style={{ textAlign: "center", marginTop: "30px" }}>
+              <h3 style={{ display: "inline" }}></h3>
               <h3
                 style={{ display: "inline", color: "blue", fontWeight: "bold" }}
               >
@@ -105,12 +104,11 @@ function Result() {
               업로드하신 테마로 변환된 결과를 알려드려요
             </h3>
           )}
-          <br />
           {pocessedImageUrl !== undefined ? (
             <img
               alt=""
               src={`/uploads/${pocessedImageUrl}`}
-              style={{ width: "80%", height: "auto", objectFit: "cover" }}
+              style={{ width: 200, height: 200, objectFit: "cover", marginTop: "15px" }}
             ></img>
           ) : (
             <></>

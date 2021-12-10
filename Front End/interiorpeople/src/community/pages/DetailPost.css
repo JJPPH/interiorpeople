@@ -4,6 +4,7 @@
 .writer-id {
     font-family: 'Cairo', sans-serif;
     font-weight: bolder;
+    font-size: 18px;
 }
 
 .text {
@@ -11,12 +12,4 @@
     margin-bottom: 15px;
     font-family: 'Nanum Gothic', sans-serif;
     font-weight: bolder;
-}
-
-.delete {
-
-}
-
-.comment-button {
-    
 }
