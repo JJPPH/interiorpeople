@@ -1,12 +1,14 @@
 {
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "cSpell.ignorePaths": [
-    "package-lock.json",
-    "node_modules",
-    "vscode-extension",
-    ".git/objects",
-    ".vscode",
-    ".vscode-insiders",
-    "Front End"
-  ]
+  "dotenv.enableAutocloaking": false,
+  "emmet.includeLanguages": {
+    "ejs": "html"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "j69.ejs-beautify"
+  },
+  "[ejs]": {
+    "editor.defaultFormatter": "j69.ejs-beautify"
+  },
+  "cSpell.words": ["interiorpeople"]
 }

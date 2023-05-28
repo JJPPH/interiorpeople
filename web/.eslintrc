@@ -1,0 +1,12 @@
+{
+  "extends": ["airbnb-base", "plugin:node/recommended", "prettier"],
+
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "ignorePatterns": ["node_modules/"],
+  "rules": {
+    "import/no-extraneous-dependencies": 0
+  }
+}
