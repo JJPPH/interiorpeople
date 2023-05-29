@@ -4,7 +4,6 @@ const express = require('express')
 const cookieParser = require('cookie-parser')
 const expressSession = require('express-session')
 const passport = require('passport')
-// eslint-disable-next-line node/no-extraneous-require
 const flash = require('connect-flash')
 // const helmet = require('helmet')
 // const hpp = require('hpp')
@@ -43,7 +42,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 app.use(express.static(path.join(__dirname, 'public')))
-app.use('/default_profile_img', express.static(path.join(__dirname, 'uploads/default_profile_img')))
+app.use('/user_profile_img', express.static(path.join(__dirname, 'uploads/user_profile_img')))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser(process.env.COOKIE_SECRET))
@@ -63,6 +62,22 @@ app.use(flash())
 
 app.use(passport.initialize())
 app.use(passport.session())
+
+// TODO : 개발용
+// if (process.env.NODE_ENV !== 'production') {
+//   app.use((req, res, next) => {
+//     const user = { email: '1@1.com', password: '1' }
+
+//     // TODO : 삭제 필요
+//     // eslint-disable-next-line consistent-return
+//     req.logIn(user, (err) => {
+//       if (err) {
+//         return next(err)
+//       }
+//       next()
+//     })
+//   })
+// }
 
 app.use((req, res, next) => {
   res.locals.user = req.user

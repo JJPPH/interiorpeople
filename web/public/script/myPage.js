@@ -13,3 +13,25 @@ uploadInput.addEventListener('change', (event) => {
 
   reader.readAsDataURL(file)
 })
+
+const deleteAccountButtonElement = document.getElementById('delete-account-button')
+deleteAccountButtonElement.addEventListener('click', () => {
+  const deleteAccountCheck = confirm('Are you sure you want to leave?')
+  if (deleteAccountCheck) {
+    fetch('/delete-account', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          alert('account is deleted')
+          window.location.href = '/' // 홈페이지 URL로 변경해야 합니다.
+        }
+      })
+      .catch((error) => {
+        alert('there is an error.')
+      })
+  }
+})

@@ -5,12 +5,12 @@ const User = require('../../models/user.model')
 
 const setPassportConfig = () => {
   passport.serializeUser((user, done) => {
-    done(null, user.id)
+    done(null, user.email)
   })
 
-  passport.deserializeUser(async (id, done) => {
+  passport.deserializeUser(async (email, done) => {
     try {
-      const user = await User.findOne({ where: { id } })
+      const user = await User.findOne({ where: { email } })
       done(null, user)
     } catch (error) {
       done(error)
