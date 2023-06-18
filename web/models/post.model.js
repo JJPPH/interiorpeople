@@ -1,15 +1,25 @@
-const Sequelize = require('sequelize')
+const { Sequelize, DataTypes } = require('sequelize')
 
 class Post extends Sequelize.Model {
   static initiate(sequelize) {
     Post.init(
       {
-        content: {
-          type: Sequelize.STRING(150),
+        title: {
+          type: DataTypes.STRING(50),
           allowNull: false,
         },
-        // TODO : 이미지를 몇 개로 할 것인지
-        // img:{}
+        content: {
+          type: DataTypes.STRING(250),
+          allowNull: false,
+        },
+        authorId: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+        },
+        likeCount: {
+          type: DataTypes.INTEGER.UNSIGNED,
+          defaultValue: 0,
+        },
       },
       {
         sequelize,
@@ -25,8 +35,13 @@ class Post extends Sequelize.Model {
   }
 
   static associate(db) {
-    db.Post.belongsTo(db.User)
-    db.Post.belongsToMany(db.Hashtag, { through: 'PostHashtag' })
+    db.Post.hasMany(db.PostImage, { foreignKey: 'postId', sourceKey: 'id' })
+
+    db.Post.belongsTo(db.User, { foreignKey: 'authorId', sourceKey: 'id' })
+
+    db.Post.belongsToMany(db.User, { foreignKey: 'postId', through: 'Like' })
+
+    db.Post.belongsTo(db.Comment, { foreignKey: 'postId', sourceKey: 'id' })
   }
 }
 

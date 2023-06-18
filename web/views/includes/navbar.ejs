@@ -5,50 +5,51 @@
         <a href="/" class="text-black text-lg font-extrabold">InteriorPeople</a>
       </div>
 
-      <div class="hidden md:block">
+      <div class="md:block">
         <div class="ml-10 flex items-baseline space-x-1">
-          <a href="#" class="nav-link">Home</a>
-          <a href="#" class="nav-link">About</a>
-          <a href="/community/all-post" class="nav-link">Community</a>
-          <div class="relative">
-            <p id='support-btn' class="nav-link">Support</p>
-            <div id='' class="absolute bg-white mt-2 py-2 w-24 rounded-md shadow-lg support-dropdown-menu hidden">
-              <a href="/support/faq" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">FAQ</a>
-              <a href="/support/guide" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Guide</a>
+          <a href="/" class="nav-link">Home</a>
+          <a href="/#" class="nav-link">About</a>
+          <a href="/community/all-posts" class="nav-link">Community</a>
+          <div class="relative" id="support-btn">
+            <p class="nav-link">Support</p>
+            <div id="support-dropdown" class="absolute bg-white py-2 w-24 rounded-md shadow-lg hidden">
+              <a href="/support/faq" class="block px-4 py-2 text-xl text-center text-gray-800 hover:bg-gray-200">FAQ</a>
+              <a href="/support/guide" class="block px-4 py-2 text-xl text-center text-gray-800 hover:bg-gray-200">Guide</a>
             </div>
           </div>
-
         </div>
       </div>
 
-      <div class="hidden md:block">
+      <div class="md:block">
         <div class="ml-4 flex items-center md:ml-6">
 
+          <!-- 사용자가 로그인한 경우 -->
           <%if(user){%>
-          <!--사용자 정보 관련-->
           <div class="relative" id="user-info">
-
-
-            <button class=" mt-2 w-12 h-12 rounded-full bg-black flex items-center justify-center">
-
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6c2.761 0 5-2.239 5-5S14.761 0 12 0 7 2.239 7 5s2.239 5 5 5zm0 4c-3.309 0-6 2.691-6 6v2h12v-2c0-3.309-2.691-6-6-6z" />
-              </svg>
+            <button class="w-7 h-7 rounded-full flex items-center justify-center border-2 border-black overflow-hidden">
+              <% if (user.profileImg) { %>
+              <img src="<%= user.profileImg %>" alt="유저 프로필 이미지" />
+              <% } else { %>
+              <img src="/userProfileImg/basic-user-image.png" alt="유저 프로필 이미지" class="rounded-full mt-2" />
+              <% } %>
             </button>
-            <div id="my-info-menu" class="hidden absolute right-0 mt-2 w-24 bg-white border rounded shadow-lg left-0">
-              <a href="/my-page" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">My Page</a>
-              <form action="/auth/logout" method="POST" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">
+
+            <div id="my-info-menu" class="hidden absolute right-0 mt-2 w-24 bg-white border border-gray-300 rounded shadow-lg left-0">
+              <a href="/my-page/edit-profile" class="block px-2 py-2 text-lg text-center text-gray-800 hover:bg-gray-200">My Page</a>
+              <hr class="border-t border-gray-300">
+              <form action="/auth/logout" method="POST" class="block px-2 py-2 text-lg text-center text-gray-800 hover:bg-gray-200">
                 <button type="submit">Logout</button>
               </form>
             </div>
-          </div>
-          <%}else{%>
-          <a href="/auth/login" class="nav-link">Login</a>
-          <a href="/auth/signup" class="nav-link">Sign Up</a>
-          <%}%>
+
+
+            <!-- 사용자가 로그인하지 않은 경우 -->
+            <%}else{%>
+            <a href="/auth/login" class="nav-link">Login</a>
+            <a href="/auth/signup" class="nav-link">Sign Up</a>
+            <%}%>
         </div>
       </div>
-
     </div>
   </div>
 </nav>

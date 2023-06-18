@@ -10,20 +10,18 @@ module.exports = () => {
       {
         usernameField: 'email',
         passwordFiled: 'password',
-        passReqToCallback: false,
       },
       async (email, password, done) => {
         try {
           const existingUser = await User.findOne({ where: { email } })
-
           if (!existingUser) {
-            done(null, false, { message: '잘못된 이메일' })
+            done(null, false, { message: '잘못된 입력 정보입니다.' })
           } else {
             const passwordCheck = await bcrypt.compare(password, existingUser.password)
             if (!passwordCheck) {
-              done(null, false, { message: '잘못된 비밀번호' })
+              done(null, false, { message: '잘못된 입력 정보입니다.' })
             } else {
-              done(null, existingUser)
+              done(null, existingUser.id)
             }
           }
         } catch (error) {

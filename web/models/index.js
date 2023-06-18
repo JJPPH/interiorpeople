@@ -1,12 +1,13 @@
 const Sequelize = require('sequelize')
 
 const env = process.env.NODE_ENV || 'development'
-const config = require('../config/sequelize.config.json')[env]
+const config = require('../config/config.json')[env]
 
 const User = require('./user.model')
-const Comment = require('./comment.model')
-const Hashtag = require('./hashtag.model')
 const Post = require('./post.model')
+const PostImage = require('./postImage.model')
+const Like = require('./like.model')
+const Comment = require('./comment.model')
 
 const db = {}
 
@@ -15,18 +16,20 @@ const sequelize = new Sequelize(config.database, config.username, config.passwor
 db.sequelize = sequelize
 
 db.User = User
-db.Comment = Comment
-db.Hashtag = Hashtag
 db.Post = Post
+db.PostImage = PostImage
+db.Comment = Comment
+db.Like = Like
 
 User.initiate(sequelize)
-Comment.initiate(sequelize)
-Hashtag.initiate(sequelize)
 Post.initiate(sequelize)
+PostImage.initiate(sequelize)
+Comment.initiate(sequelize)
+Like.initiate(sequelize)
 
 User.associate(db)
-Comment.associate(db)
-Hashtag.associate(db)
 Post.associate(db)
+PostImage.associate(db)
+Comment.associate(db)
 
 module.exports = db

@@ -1,28 +1,29 @@
 const path = require('path')
 const multer = require('multer')
+const { v4: uuid } = require('uuid')
 // const multer_s3 = require('multer-s3')
-const { v1: uuid } = require('uuid')
-// const mime = require('mime-types')
 const fs = require('fs')
+const dotenv = require('dotenv')
 
-/** AWS 관련 */
+dotenv.config()
+
 // const { s3 } = require('../aws')
 
 const multerConfig = (imageDirName) => {
   let multerSetting = multer()
+  // & 개발 환경에서는 로컬 스토리지에서 관리
   if (process.env.NODE_ENV === 'development') {
-    /** 개발 환경에서는 로컬 스토리지에서 이미지 관리 */
-
-    if (!fs.existsSync(`./uploads/${imageDirName}`)) {
-      fs.mkdirSync(`./uploads/${imageDirName}`, { recursive: true })
+    const imageBasicPath = path.join(__dirname, '..', 'uploads', `${imageDirName}`)
+    if (!fs.existsSync(imageBasicPath)) {
+      fs.mkdirSync(imageBasicPath, { recursive: true })
     }
 
     const storage = multer.diskStorage({
       destination: (req, file, cb) => {
-        cb(null, './uploads')
+        cb(null, imageBasicPath)
       },
       filename: (req, file, cb) => {
-        const fileName = `${imageDirName}/${uuid()}.${path.extname(file.originalname)}`
+        const fileName = `${uuid()}.${path.extname(file.originalname)}`
         cb(null, fileName)
       },
     })
@@ -33,12 +34,11 @@ const multerConfig = (imageDirName) => {
         if (['image/png', 'image/jpeg', 'image/jpg'].includes(file.mimetype)) {
           cb(null, true)
         } else {
-          // @ts-ignore
           cb(new Error(`파일 타입이 이미지가 아닙니다! : ${file.mimetype}`), false)
         }
       },
       limits: {
-        fileSize: 1024 * 1024 * 5, // 파일 크기를 5mb로 제한
+        fileSize: 1024 * 1024 * 5,
       },
     })
   }

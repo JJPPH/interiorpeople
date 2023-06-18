@@ -1,0 +1,44 @@
+<%-include("../../includes/head",{pageTitle})%>
+
+<link rel="stylesheet" href="/css/createPost.css">
+<script src='/script/createPost.js' defer></script>
+</head>
+
+
+<body>
+  <%-include("../../includes/navbar")%>
+
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-4">Create Post</h1>
+    <form action="/community/create-post" method="POST" class="bg-white rounded-lg shadow-lg p-6" enctype="multipart/form-data">
+      <div class="mb-4">
+        <label for="image" class="block text-gray-700 font-bold mb-2">Image</label>
+        <div class="carousel-container hidden">
+          <div id="carousel-slide" class="carousel-slide"></div>
+          <div id="carousel-nav" class="carousel-nav" style="display: none">
+            <div class="carousel-nav-button" onclick="handleNavButtonClick('prev')">&lt;</div>
+            <div class="carousel-nav-button" onclick="handleNavButtonClick('next')">&gt;</div>
+          </div>
+        </div>
+        <div id="carousel-indicators" class="carousel-indicators"></div>
+        <label for="image" class="flex items-center justify-center w-full h-20 bg-blue-500 text-white rounded-lg cursor-pointer">
+          Choose multiple images
+          <input id="image" type="file" accept="image/*" name="post-images" class="hidden custom-file-input" multiple onchange="handleFileUpload(event)" />
+        </label>
+      </div>
+      <div class="mb-4">
+        <label for="title" class="block text-gray-700 font-bold mb-2">Title</label>
+        <input id="title" type="text" name="title" class="w-full px-3 py-2 border border-gray-300 rounded" required />
+      </div>
+      <div class="mb-4">
+        <label for="content" class="block text-gray-700 font-bold mb-2">Content</label>
+        <textarea id="content" name="content" class="w-full px-3 py-2 border border-gray-300 rounded" rows="6" required></textarea>
+      </div>
+
+      <div class="flex justify-end">
+        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Create Post</button>
+      </div>
+    </form>
+  </div>
+
+  <%-include("../../includes/footer")%></input>

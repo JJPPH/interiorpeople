@@ -1,0 +1,56 @@
+<%-include("../includes/head",{pageTitle})%>
+<script src="/script/editAccount.js" defer></script>
+</head>
+
+
+<body>
+  <%-include("../includes/navbar")%>
+
+  <main>
+    <div class="flex">
+      <%-include("./includes/sidebar")%>
+
+      <div class="w-3/4 mt-10 mx-auto">
+        <div class="bg-white p-10 rounded-lg shadow-md max-w-xl">
+
+          <h2 class="text-lg font-bold text-gray-800 mb-4">Edit Username</h2>
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="username">New Username</label>
+            <input class="w-full px-3 py-2 border border-black rounded " type="text" id="username" name="username">
+            <div class="flex justify-end">
+              <button id='edit-username-button' class="bg-black text-white font-bold mt-2 py-2 px-4 rounded focus:outline-none focus:shadow-outline border border-black hover:bg-gray-700">Change name</button>
+            </div>
+          </div>
+
+          <h2 class="text-lg font-bold text-gray-800 mb-4">Edit Email</h2>
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="email">New Email</label>
+            <input class="w-full px-3 py-2 border border-black rounded " type="text" id="email" name="email">
+            <div class="flex justify-end">
+              <button id='edit-email-button' class="bg-black text-white font-bold mt-2 py-2 px-4 rounded focus:outline-none focus:shadow-outline border border-black hover:bg-gray-700">Change Email</button>
+            </div>
+          </div>
+
+          <h2 class="text-lg font-bold text-gray-800 mt-8 mb-4">Edit Password</h2>
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="current-password">Current Password</label>
+            <input class="w-full px-3 py-2 border border-black rounded" type="password" type="password" id="current-password" name="current-password">
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="new-password">New Password</label>
+            <input class="w-full px-3 py-2 border border-black rounded" type="password" id="new-password" name="new-password">
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="confirm-password">Confirm Password</label>
+            <input class="w-full px-3 py-2 border border-black rounded" type="password" id="confirm-password" name="confirm-password">
+            <div class="flex justify-end">
+              <button id='edit-password-button' class="bg-black text-white font-bold mt-2 py-2 px-4 rounded focus:outline-none focus:shadow-outline border border-black hover:bg-gray-700">Change Password</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <%-include("../includes/footer")%>
