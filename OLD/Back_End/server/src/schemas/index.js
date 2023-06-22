@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 // @ts-check
+require('dotenv').config()
 
 const mongoose = require('mongoose')
 

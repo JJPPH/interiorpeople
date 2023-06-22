@@ -48,10 +48,10 @@ app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
 // 레디스 설정
-const redisClient = redis.createClient({
-  url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
-  password: process.env.REDIS_PASSWORD,
-})
+// const redisClient = redis.createClient({
+//   url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
+//   password: process.env.REDIS_PASSWORD,
+// })
 
 // app.use(
 //   cors({
@@ -79,7 +79,7 @@ if (NODE_ENV === 'production') {
   sessionOption.proxy = true
   sessionOption.cookie.secure = true
   // @ts-ignore
-  sessionOption.store = new RedisStore({ client: redisClient }) // ! redis 관련 수정
+  // sessionOption.store = new RedisStore({ client: redisClient }) // ! redis 관련 수정
 }
 
 // @ts-ignore
