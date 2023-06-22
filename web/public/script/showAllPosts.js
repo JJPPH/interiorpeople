@@ -1,116 +1,95 @@
 let lastPostId = null
 let lastPost = null
+let isLoading = false
 
-const loadData = async () => {
+const intersectionObserver = new IntersectionObserver(
+  async (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting && !isLoading) {
+        intersectionObserver.unobserve(entry.target)
+        // eslint-disable-next-line no-use-before-define
+        loadPostData().catch(() => {
+          alert('잠시 후에 다시 시도해 주시길 바랍니다.')
+        })
+      }
+    })
+  },
+  {
+    threshold: 0.1,
+  }
+)
+
+const loadPostData = async () => {
   try {
+    isLoading = true
     const response = await fetch(`/community/next-posts${lastPostId ? `?last-post-id=${lastPostId}` : ''}`)
+    if (!response.ok) {
+      throw new Error('잠시 후 다시 시도해 보시길 바랍니다.')
+    }
     const responseData = await response.json()
-    console.log(responseData)
 
-    if (!responseData || responseData.length === 0) {
+    const { posts } = responseData
+    if (!posts || posts.length === 0) {
       lastPost = null
       lastPostId = null
       return
     }
 
-    lastPostId = responseData[responseData.length - 1].id
+    lastPostId = posts[posts.length - 1].id
 
     const postContainer = document.getElementById('post-container')
-    responseData.forEach((postData, index) => {
+    posts.forEach((postData, index) => {
       const postDiv = document.createElement('div')
-      const imgSrc = `/${postData.PostImages[0].foldername}/${postData.PostImages[0].filename}`
-
-      const likeButton = document.createElement('button')
-      likeButton.className = 'bg-blue-500 text-white px-4 py-2 rounded'
-      likeButton.innerText = '좋아요'
-
-      likeButton.addEventListener('click', async () => {
-        try {
-          const response = await fetch(`/community/like/${postData.id}`, {
-            method: 'PATCH',
-          })
-
-          if (response.ok) {
-            console.log(response)
-            const result = await response.json()
-            console.log(result)
-            console.log('PATCH 요청이 성공적으로 전송되었습니다.')
-            // 요청이 성공한 경우 추가로 수행할 작업을 처리합니다.
-          } else {
-            console.error('PATCH 요청이 실패하였습니다.')
-            // 요청이 실패한 경우 처리할 작업을 수행합니다.
-          }
-        } catch (error) {
-          console.error('PATCH 요청 중 오류가 발생하였습니다:', error)
-          // 오류가 발생한 경우 처리할 작업을 수행합니다.
-        }
-      })
-
-      postDiv.className = 'bg-white p-4 shadow-md'
-
-      const iDiv = document.createElement('div')
-      iDiv.innerHTML = `
-      <img src="${imgSrc}" alt="포스트 이미지" class="post-image">
-      <h2 class="text-lg font-semibold">${postData.title}</h2>
-      <h3>${postData.id}</h3>
-      <p>${postData.content}</p>
+      postDiv.classList.add('mb-5')
+      postDiv.classList.add('w-full')
+      postDiv.innerHTML = `
+      <div class="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-500 transform hover:scale-105 cursor-pointer">
+        <div class="flex items-start">
+          <img src="/${postData.PostImages[0].foldername}/${
+        postData.PostImages[0].filename
+      }" alt="포스트 이미지" class="w-1/3 h-full object-cover mr-4"
+      download="${postData.PostImages[0].originalname}">
+          <div class="w-2/3 h-full flex flex-col">
+            <h2 class="text-xl font-bold mb-32">${postData.title}</h2>
+            <div class="flex justify-between text-sm text-gray-500 mt-auto">
+            <div class='flex flex-row'>
+              <div class="w-5 h-5 rounded-full flex items-center justify-center border-2 border-black overflow-hidden">
+                <img src="${
+                  postData.User.authorProfileImg ? postData.User.authorProfileImg : '/userProfileImg/basic-user-image.png'
+                }" alt="유저 프로필 이미지" class="${postData.User.authorProfileImg ? '' : 'rounded-full mt-2'}" />
+                </div>
+                <div class='ml-2'>${postData.User.authorName}</div>
+                </div>
+              <p>${new Date(postData.createdAt).toLocaleString()}</p>
+              <p>좋아요: 좋아요 수</p>
+            </div>
+          </div>
+        </div>
+      </div>
       `
 
-      iDiv.addEventListener('click', () => {
-        window.location.href = `/community/post/${postData.id}` // 이동할 페이지의 URL을 지정합니다.
+      postDiv.addEventListener('click', () => {
+        window.location.href = `/community/post/${postData.id}`
       })
 
-      postDiv.appendChild(iDiv)
-
-      const underDiv = document.createElement('div')
-      underDiv.className = 'flex justify-between items-center mt-4'
-      underDiv.innerHTML = `
-      <div class="flex items-center">
-          <!--<img src="{${postData.User.profileImg}}" alt="프로필 이미지 " class="w-8 h-8 rounded-full mr-2">-->
-          <span>${postData.User.name}</span>
-        </div>
-        `
-      underDiv.appendChild(likeButton)
-      postDiv.appendChild(underDiv)
       postContainer.appendChild(postDiv)
 
-      if (index === responseData.length - 1) {
+      if (index === posts.length - 1) {
         lastPost = postDiv
-        io.observe(lastPost) // `lastPost`가 업데이트된 후에 `IntersectionObserver`에 등록
+        intersectionObserver.observe(lastPost)
+        console.log(lastPostId)
+        console.log(lastPost)
       }
     })
+
+    isLoading = false
   } catch (error) {
-    console.log(error.message)
+    isLoading = false
+    console.log(error)
+    alert('잠시 후에 다시 시도해 주시길 바랍니다.')
   }
 }
 
-const io = new IntersectionObserver(
-  async (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        console.log('현재 보이는 타켓', entry.target)
-        io.unobserve(entry.target)
-
-        loadData()
-          .then(() => {
-            if (lastPost) {
-              io.observe(lastPost) // 새로운 `lastPost`에 대해 다시 관찰 등록
-            }
-          })
-          .catch((error) => {
-            console.error('Error:', error)
-          })
-      }
-    })
-  },
-  {
-    threshold: 0.5,
-  }
-)
-
-window.addEventListener('DOMContentLoaded', async () => {
-  await loadData()
-  // if (lastPost) {
-  //   io.observe(lastPost)
-  // }
+window.addEventListener('DOMContentLoaded', () => {
+  loadPostData()
 })

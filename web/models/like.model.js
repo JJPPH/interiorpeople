@@ -1,18 +1,9 @@
-const { Sequelize, DataTypes } = require('sequelize')
+const { Sequelize } = require('sequelize')
 
 class Like extends Sequelize.Model {
   static initiate(sequelize) {
     Like.init(
-      {
-        likeUserId: {
-          type: DataTypes.INTEGER,
-          allowNull: false,
-        },
-        postId: {
-          type: DataTypes.INTEGER,
-          allowNull: false,
-        },
-      },
+      {},
       {
         sequelize,
         timestamps: false,

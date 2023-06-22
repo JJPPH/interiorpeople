@@ -1,152 +1,92 @@
-<%- include("../../includes/head", { pageTitle }) %>
-<link rel="stylesheet" href="/css/createPost.css">
+<%- include("../includes/head", { pageTitle }) %>
+<link rel="stylesheet" href="/css/imageslide.css">
 <script src="/script/postDetail.js" defer></script>
 </head>
 
-<body>
-  <% include("../../includes/navbar") %>
 
-  <%= user.id %>
-  <%= post['User.id'] %>
-  <% if (user.id === post['User.id']) { %>
-  <div>
-    <button id="edit-post-button" data-post-id="<%= post.id %>">수정</button>
-    <button id="delete-post-button" data-post-id="<%= post.id %>">삭제</button>
-  </div>
-  <% } %>
+
+<body>
+  <%-include("../includes/navbar")%>
 
   <div class="container mx-auto py-8">
     <div class="bg-white rounded-lg shadow-md p-6">
       <h2 class="text-2xl font-bold mb-4"><%= post.title %></h2>
 
-      <img src="<%= post.postImage %>" alt="포스트 이미지" class="mb-4">
-      <p><%= post.content %></p>
-      <div class="mt-4">
+      <div id="image-preview" class="relative mb-4">
+        <div>
+          <div id="slideContainer" class="mt-4 slide-container">
+            <div id="slide" class="slide">
+              <% for (postImage of postImages) { %>
+              <div class="slide-item">
+                <img src="/<%= postImage.foldername %>/<%= postImage.filename %>" alt="" class="preview-image">
+              </div>
+              <% } %>
+            </div>
+          </div>
+          <div class="flex justify-between mt-4 mb-6">
+            <button id="prevButton" class="bg-black hover:bg-gray-700 text-white font-semibold py-1 px-2 rounded-lg cursor-pointer">
+
+              < </button>
+                <button id="nextButton" class="bg-black hover:bg-gray-700 text-white font-semibold py-1 px-2 rounded-lg cursor-pointer">
+                  >
+                </button>
+          </div>
+        </div>
+        <h3 class='mb-2'><%= post['User.name'] %></h3>
+        <p><%= post.content %></p>
+      </div>
+      <div class="flex justify-between mr-5">
+        <%if(user){%>
+
+        <div>
+          <button id="like-post-button" data-post-id="<%= post.id %>" class="bg-red-600 text-white px-4 py-2 mr-2 rounded hover:bg-red-400">
+            <%= hasLiked ? "좋아요 취소" : "좋아요"%>
+          </button>
+        </div>
+
+        <%}%>
+        <div class="flex">
+          <%if(user.id === post.authorId){%>
+        <button id="edit-post-button" data-post-id="<%= post.id %>" class="bg-black text-white px-4 py-2 mr-2 rounded hover:bg-gray-700">수정</button>
+        <button id="delete-post-button" data-post-id="<%= post.id %>" class="bg-black text-white px-4 py-2 rounded hover:bg-gray-700">삭제</button>
+        <% } %>
       </div>
     </div>
 
+  </div>
+
+  <div class="container mx-auto py-8">
     <div class="bg-white rounded-lg shadow-md p-6 mt-8">
       <h3 class="text-xl font-bold mb-4">댓글 작성</h3>
-      <textarea id="comment-textarea" class="w-full rounded-lg p-2 mb-4" rows="4" placeholder="댓글을 작성해주세요" required></textarea>
-      <button id="create-comment-button" class="bg-blue-500 text-white px-4 py-2 rounded">댓글 작성</button>
+      <textarea id="comment-textarea" class="w-full rounded-lg p-2 mb-4 resize-none" rows="4" placeholder="댓글을 작성해주세요" required></textarea>
+      <button id="create-comment-button" data-post-id="<%= post.id %>" data-user-id="<%= user.id %>" class="bg-blue-white text-black px-4 py-2 border-2 border-black rounded transition-all duration-300 hover:bg-black hover:text-white">댓글 작성</button>
     </div>
 
     <div class="bg-white rounded-lg shadow-md p-6 mt-8">
       <h3 class="text-xl font-bold mb-4">댓글</h3>
-      <% if (comments.length === 0) { %>
-      <p>댓글이 없습니다.</p>
-      <% } else { %>
       <ul id="comment-list">
+        <% if (comments.length === 0) { %>
+        <p>댓글이 없습니다.</p>
+        <% } else { %>
         <% comments.forEach(comment => { %>
-        <li class="mb-2">
-          <p class="text-gray-800"><%= comment.comment %></p>
-          <p class="text-sm text-gray-500">작성자: <%= comment["User.name"] %></p>
-          <%if(comment.commenterId===user.id){%>
-          <button class="update-comment-button" data-comment-id="<%=comment.id%>">수정</button>
-          <button class="delete-comment-button" data-comment-id="<%=comment.id%>">삭제</button>
-          <%}%>
+        <li class="mb-5 p-3 rounded-md border-2 border-gray-400">
+          <p class="text-black font-bold mb-4"><%= comment.commentContent %></p>
+          <div class='flex justify-between mb-2'>
+            <p class="text-sm text-gray-600"><%= comment["User.name"] %></p>
+            <p class="text-sm text-gray-600"><%= comment.createdAt.toLocaleString()%></p>
+          </div>
+          <% if (comment.commenterId === user.id) { %>
+          <button class="delete-comment-button text-gray-500 hover:text-gray-800" data-post-id="<%=post.id%>" data-user-id="<%=user.id%>" data-comment-id="<%=comment.id%>">삭제</button>
+          <% } %>
         </li>
         <% }) %>
       </ul>
       <% } %>
     </div>
   </div>
+  </div>
 
-  <%- include("../../includes/footer") %>
 
-  <script>
-    // 댓글 작성 폼 submit 이벤트 핸들러
-    document.getElementById('create-comment-button').addEventListener('click', function() {
-      const commentTextarea = document.getElementById('comment-textarea');
-      const comment = commentTextarea.value;
-      const postId = '<%= post.id %>';
+  <%- include("../includes/footer") %>
 
-      fetch(`/community/comment/${postId}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            postId,
-            comment
-          })
-        })
-        .then(response => response.json())
-        .then(data => {
-          // 댓글 작성 후 처리할 로직 작성
-          console.log(data)
-          refreshComments(data);
-        })
-        .catch(error => {
-          console.error('댓글 작성 에러:', error);
-        });
-    });
-
-    // 댓글 목록 새로고침 함수
-    function refreshComments(comments) {
-      const commentList = document.getElementById('comment-list');
-      console.log(commentList)
-      commentList.innerHTML = '';
-
-      if (!comments || comments.length === 0) {
-        commentList.innerHTML = '<p>댓글이 없습니다.</p>';
-      } else {
-        comments.forEach(comment => {
-          const li = document.createElement('li');
-          li.classList.add('mb-2');
-
-          const commentContent = document.createElement('p');
-          commentContent.classList.add('text-gray-800');
-          commentContent.textContent = comment.comment;
-
-          const commentAuthor = document.createElement('p');
-          commentAuthor.classList.add('text-sm', 'text-gray-500');
-          commentAuthor.textContent = '작성자: ' + comment['User.name'];
-
-          li.appendChild(commentContent);
-          li.appendChild(commentAuthor);
-          commentList.appendChild(li);
-        });
-      }
-    }
-
-    // 댓글 삭제
-    const deleteCommentButtonElements = document.querySelectorAll('.delete-comment-button')
-    deleteCommentButtonElements.forEach((button) => {
-      const commentId = button.dataset.commentId
-      const postId = '<%= post.id %>'
-      button.addEventListener("click", () => {
-          fetch(`/community/comment/${postId}/${commentId}`, {
-              method: 'DELETE'
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.delete) {
-                  fetch(`/community/comment/${postId}`, {
-                      method: 'POST',
-                      headers: {
-                        'Content-Type': 'application/json'
-                      },
-                      body: JSON.stringify({
-                        postId,
-                        comment
-                      })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                      // 댓글 작성 후 처리할 로직 작성
-                      console.log(data)
-                      refreshComments(data);
-                    })
-                    .catch(error => {
-                      console.error('댓글 작성 에러:', error);
-                    });
-                }) console.log(data)
-            }
-        })
-        .catch(error => {
-          console.error('댓글 삭제 에러:', error);
-        });
-    })
-  </script>
 </body>

@@ -1,90 +1,60 @@
-// let currentIndex = 0
+const imageUpload = document.getElementById('imageUpload')
+const imagePreview = document.getElementById('image-preview')
+const slideContainer = document.getElementById('slideContainer')
+const slide = document.getElementById('slide')
+const prevButton = document.getElementById('prevButton')
+const nextButton = document.getElementById('nextButton')
 
-// function handleFileUpload(event) {
-//   const files = event.target.files
-//   const carouselSlide = document.getElementById('carousel-slide')
-//   const carouselNav = document.getElementById('carousel-nav')
-//   const carouselIndicators = document.getElementById('carousel-indicators')
-//   carouselSlide.innerHTML = ''
-//   carouselNav.innerHTML = ''
-//   carouselIndicators.innerHTML = ''
+let currentSlideIndex = 0
+let totalSlides = 0
 
-//   if (files.length === 0) {
-//     carouselNav.style.display = 'none'
-//     return
-//   }
+imageUpload.addEventListener('change', () => {
+  imagePreview.classList.remove('hidden')
+  slide.innerHTML = ''
 
-//   for (let i = 0; i < files.length; i++) {
-//     const file = files[i]
-//     const reader = new FileReader()
+  const { files } = imageUpload
+  totalSlides = files.length
 
-//     reader.onload = function () {
-//       const image = document.createElement('img')
-//       image.src = reader.result
-//       image.classList.add('carousel-item', 'carousel-image')
-//       carouselSlide.appendChild(image)
+  if (totalSlides === 0) {
+    imagePreview.classList.add('hidden')
+  }
 
-//       const indicator = document.createElement('div')
-//       indicator.classList.add('carousel-indicator')
-//       if (i === currentIndex) {
-//         indicator.classList.add('active')
-//       }
-//       indicator.setAttribute('data-index', i.toString())
-//       carouselIndicators.appendChild(indicator)
-//     }
+  for (let i = 0; i < files.length; i += 1) {
+    const file = files[i]
+    const reader = new FileReader()
 
-//     reader.readAsDataURL(file)
-//   }
+    reader.onload = (event) => {
+      const imageUrl = event.target.result
+      const imageElement = document.createElement('img')
+      imageElement.src = imageUrl
+      imageElement.alt = 'Uploaded Image'
+      imageElement.classList.add('preview-image')
+      const slideItem = document.createElement('div')
+      slideItem.classList.add('slide-item')
+      slideItem.appendChild(imageElement)
 
-//   carouselSlide.style.transform = `translateX(0)`
-//   currentIndex = 0
-//   carouselNav.style.display = 'flex'
-// }
+      slide.appendChild(slideItem)
+    }
 
-// function handleNavButtonClick(direction) {
-//   const carouselSlide = document.getElementById('carousel-slide')
-//   const carouselItems = carouselSlide.querySelectorAll('.carousel-item')
-//   const carouselIndicators = document.getElementById('carousel-indicators').querySelectorAll('.carousel-indicator')
+    reader.readAsDataURL(file)
+  }
 
-//   const slideWidth = carouselSlide.offsetWidth
-//   const numItems = carouselItems.length
-//   const maxIndex = numItems - 1
+  currentSlideIndex = 0
+  slide.style.transform = `translateX(0)`
+})
 
-//   if (direction === 'prev') {
-//     currentIndex = currentIndex === 0 ? maxIndex : currentIndex - 1
-//   } else if (direction === 'next') {
-//     currentIndex = currentIndex === maxIndex ? 0 : currentIndex + 1
-//   }
+prevButton.addEventListener('click', () => {
+  const slideWidth = slideContainer.offsetWidth
+  if (currentSlideIndex > 0) {
+    currentSlideIndex -= 1
+  }
+  slide.style.transform = `translateX(-${currentSlideIndex * slideWidth}px)`
+})
 
-//   carouselSlide.style.transform = `translateX(-${slideWidth * currentIndex}px)`
-
-//   carouselIndicators.forEach((indicator) => {
-//     const index = parseInt(indicator.getAttribute('data-index'), 10)
-//     if (index === currentIndex) {
-//       indicator.classList.add('active')
-//     } else {
-//       indicator.classList.remove('active')
-//     }
-//   })
-// }
-
-// function handleIndicatorClick(index) {
-//   const carouselSlide = document.getElementById('carousel-slide')
-//   const carouselItems = carouselSlide.querySelectorAll('.carousel-item')
-//   const carouselIndicators = document.getElementById('carousel-indicators').querySelectorAll('.carousel-indicator')
-
-//   const slideWidth = carouselSlide.offsetWidth
-
-//   currentIndex = index
-
-//   carouselSlide.style.transform = `translateX(-${slideWidth * currentIndex}px)`
-
-//   carouselIndicators.forEach((indicator) => {
-//     const idx = parseInt(indicator.getAttribute('data-index'), 10)
-//     if (idx === currentIndex) {
-//       indicator.classList.add('active')
-//     } else {
-//       indicator.classList.remove('active')
-//     }
-//   })
-// }
+nextButton.addEventListener('click', () => {
+  const slideWidth = slideContainer.offsetWidth
+  if (currentSlideIndex < totalSlides - 1) {
+    currentSlideIndex += 1
+  }
+  slide.style.transform = `translateX(-${currentSlideIndex * slideWidth}px)`
+})

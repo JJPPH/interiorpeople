@@ -27,8 +27,8 @@ PostImage.initiate(sequelize)
 Comment.initiate(sequelize)
 Like.initiate(sequelize)
 
-User.associate(db)
 Post.associate(db)
+User.associate(db)
 PostImage.associate(db)
 Comment.associate(db)
 

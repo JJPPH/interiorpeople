@@ -12,7 +12,7 @@ class User extends Sequelize.Model {
         email: {
           type: DataTypes.STRING(30),
           allowNull: false,
-          unique: true,
+          // unique: true,
         },
         password: {
           type: DataTypes.STRING(100),
@@ -57,7 +57,8 @@ class User extends Sequelize.Model {
     db.User.hasMany(db.Post, { foreignKey: 'authorId', sourceKey: 'id' })
     db.User.hasMany(db.Comment, { foreignKey: 'commenterId', sourceKey: 'id' })
 
-    db.User.belongsToMany(db.Post, { foreignKey: 'likeUserId', through: 'Like' })
+    db.User.belongsToMany(db.Post, { through: 'Like', as: 'LikedPost' })
+
     db.User.hasMany(db.Comment, { foreignKey: 'commenterId', sourceKey: 'id' })
   }
 }

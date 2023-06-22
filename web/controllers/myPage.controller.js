@@ -1,3 +1,6 @@
+const fs = require('fs')
+const path = require('path')
+
 const { validationResult } = require('express-validator')
 const bcrypt = require('bcrypt')
 require('dotenv').config()
@@ -103,7 +106,20 @@ exports.getDeleteAccount = async (req, res) => {
 // = 유저 계정 탈퇴 처리하기
 exports.deleteAccount = async (req, res, next) => {
   try {
-    await User.destroy({ where: { id: req.user.id } })
+    const user = await User.findByPk(req.user.id)
+
+    if (user.profileImg) {
+      const filePath = path.join(__dirname, '..', 'uploads', user.profileImg)
+      fs.unlink(filePath, (err) => {
+        if (err) {
+          console.error('파일 삭제 오류:', err)
+          return
+        }
+        console.log('파일이 성공적으로 삭제되었습니다.')
+      })
+    }
+
+    await user.destroy()
 
     return req.logout(() => {
       res.clearCookie('connectID')

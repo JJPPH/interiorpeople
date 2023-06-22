@@ -39,9 +39,9 @@ class Post extends Sequelize.Model {
 
     db.Post.belongsTo(db.User, { foreignKey: 'authorId', sourceKey: 'id' })
 
-    db.Post.belongsToMany(db.User, { foreignKey: 'postId', through: 'Like' })
+    db.Post.belongsToMany(db.User, { through: 'Like', as: 'Liker' })
 
-    db.Post.belongsTo(db.Comment, { foreignKey: 'postId', sourceKey: 'id' })
+    db.Post.hasMany(db.Comment, { foreignKey: 'postId', sourceKey: 'id' })
   }
 }
 

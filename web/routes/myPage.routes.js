@@ -11,6 +11,7 @@ const {
   patchEditPassword,
   getDeleteAccount,
   deleteAccount,
+  // getMyPost,
 } = require('../controllers/myPage.controller')
 
 /** 미들웨어 */
@@ -67,5 +68,8 @@ router.get('/delete-account', isLoggedIn, getDeleteAccount)
 
 // = 유저 계정 탈퇴 처리하기
 router.delete('/delete-account', isLoggedIn, deleteAccount)
+
+// = 유저의 포스트 보여주기
+// router.get('/:userId', isLoggedIn, getMyPost)
 
 module.exports = router

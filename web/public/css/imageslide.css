@@ -1,0 +1,22 @@
+.preview-image {
+  width: 500px;
+  height: 500px;
+  object-fit: cover;
+}
+
+.slide-container {
+  overflow: hidden;
+  position: relative;
+}
+
+.slide {
+  display: flex;
+  justify-content: flex-start;
+  transition: transform 0.3s ease-in-out;
+}
+
+.slide-item {
+  flex: 0 0 100%;
+  display: flex;
+  justify-content: center;
+}
