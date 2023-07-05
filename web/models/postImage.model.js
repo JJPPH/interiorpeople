@@ -8,11 +8,11 @@ class PostImage extends Sequelize.Model {
           type: DataTypes.STRING,
           allowNull: false,
         },
-        filename: {
+        postImgUrl: {
           type: DataTypes.STRING,
           allowNull: false,
         },
-        foldername: {
+        postImgKey: {
           type: DataTypes.STRING,
           allowNull: false,
         },
@@ -24,9 +24,6 @@ class PostImage extends Sequelize.Model {
       {
         sequelize,
         timestamps: true,
-        underscored: false,
-        modelName: 'PostImage',
-        tableName: 'PostImages',
       }
     )
   }

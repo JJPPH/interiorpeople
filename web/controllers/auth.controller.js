@@ -35,6 +35,7 @@ exports.postLogin = (req, res, next) => {
       if (loginError) {
         return next(loginError)
       }
+
       return res.redirect('/')
     })
   })(req, res, next)
@@ -99,11 +100,10 @@ exports.postResetPassword = async (req, res, next) => {
 
   try {
     const token = crypto.randomBytes(20).toString('hex')
-
     const user = await User.findOne({ where: { email: req.body.email } })
 
-    await redisClient.set(`${user.id}_token`, token)
-    await redisClient.expire(`${user.id}_token`, 3600)
+    await redisClient.set(`passwordToken:${user.id}`, token)
+    await redisClient.expire(`passwordToken:${user.id}`, 600)
 
     emailTransporter.sendMail({
       to: req.body.email,
@@ -112,14 +112,13 @@ exports.postResetPassword = async (req, res, next) => {
       html: `<h1>비밀번호 변경 확인</h1>
               <p>안녕하세요, ${user.name}님!</p>
               <p>비밀번호 변경 요청이 접수되었습니다. 아래 링크를 클릭하여 비밀번호를 변경해주세요.</p>
-              <p><a href="http://localhost:3000/auth/new-password/${user.id}/${token}">비밀번호 변경하기</a></p>
+              <p><a href="www.interiorpeople.shop/auth/new-password/${user.id}/${token}">비밀번호 변경하기</a></p>
               <p>이 링크는 1시간 동안 유효합니다. 유효 기간이 지나면 다시 비밀번호 변경 요청을 하셔야 합니다.</p>
               <p>문제가 있거나 도움이 필요한 경우, 저희에게 연락해주세요.</p>
               <p>감사합니다.</p>
             `,
     })
 
-    // TODO : 메일을 발송하였음을 알려주기
     return res.redirect('/auth/login')
   } catch (error) {
     return next(error)

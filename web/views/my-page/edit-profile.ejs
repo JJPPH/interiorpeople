@@ -16,11 +16,7 @@
           <h2 class="text-lg font-bold text-gray-800 mb-4">Profile Picture</h2>
 
           <div class="w-64 h-64 rounded-full flex items-center justify-center border-2 border-black overflow-hidden mx-auto">
-            <% if (user.profileImg) { %>
-            <img id="profileImg" src="<%= user.profileImg %>" alt="유저 프로필 이미지" />
-            <% } else { %>
-            <img id="profileImg" src="/userProfileImg/basic-user-image.png" alt="유저 프로필 이미지" class="rounded-full mt-20" />
-            <% } %>
+            <img id="profileImg" src="<%= user.profileImgUrl %>" alt="유저 프로필 이미지" />
           </div>
 
           <hr class="my-10 border-2 border-gray-200 rounded-xl">

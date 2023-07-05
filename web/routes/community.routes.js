@@ -1,11 +1,9 @@
 const express = require('express')
 const { body: bodyValidator, param: paramValidator } = require('express-validator')
 
-/** 컨트롤러 */
 const communityController = require('../controllers/community.controller')
 
-/** 미들웨어 */
-const { isLoggedIn } = require('../middlewares/checkAuth.middleware')
+const { isLoggedIn } = require('../middlewares/authentication.middleware')
 const multerConfig = require('../middlewares/multerConfig.middleware')
 
 const postImgFolderName = 'userPostImg'
@@ -18,12 +16,6 @@ router.get('/all-posts', communityController.getAllPosts)
 
 // = 다음 포스트 가져오기
 router.get('/next-posts', communityController.getNextPosts)
-
-// = 포스트 상세 가져오기
-router.get('/post/:postId', paramValidator('postId').notEmpty(), communityController.getPost)
-
-// = 좋아요 처리하기
-router.patch('/like/:postId', isLoggedIn, paramValidator('postId').notEmpty(), communityController.patchLike)
 
 // = 새 포스트 작성 화면 가져오기
 router.get('/create-post', isLoggedIn, communityController.getCreatePost)
@@ -54,11 +46,17 @@ router.post(
   communityController.postCreatePost
 )
 
+// = 좋아요 처리하기
+router.patch('/like/:postId', isLoggedIn, paramValidator('postId').notEmpty(), communityController.patchLike)
+
+// = 포스트 상세 가져오기
+router.get('/post/:postId', paramValidator('postId').notEmpty(), communityController.getPost)
+
 // = 포스트 삭제 처리하기
 router.delete('/:postId', isLoggedIn, paramValidator('postId').notEmpty(), communityController.deletePost)
 
 // = 포스트 수정 화면 가져오기
-router.get('/edit/:postId', isLoggedIn, paramValidator('postId').notEmpty(), communityController.getEditPost)
+// router.get('/edit/:postId', isLoggedIn, paramValidator('postId').notEmpty(), communityController.getEditPost)
 
 // = 새 댓글 작성 처리하기
 router.post('/comment/:postId', isLoggedIn, paramValidator('postId').notEmpty(), communityController.postComments)

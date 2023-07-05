@@ -1,5 +1,6 @@
 <%-include("../includes/head",{pageTitle})%>
 
+<script src="/script/faq.js" defer></script>
 </head>
 
 
@@ -7,7 +8,34 @@
   <%-include("../includes/navbar")%>
 
   <main>
-    FAQ
+
+    <div class="container mx-auto py-10">
+      <h1 class="text-4xl mb-8 text-center">자주 묻는 질문</h1>
+      <div class="space-y-6">
+        <div>
+          <button class="faq-question text-left w-full text-2xl py-2 px-4 rounded shadow">Q1. 서비스 이용 방법은 어떻게 되나요?</button>
+          <div class="faq-answer hidden overflow-hidden transition-height duration-500 ease-in-out" style="height: 0;">A1. 서비스는 가입 후 로그인을 통해 이용하실 수 있습니다.</div>
+        </div>
+        <div>
+          <button class="faq-question text-left w-full text-2xl py-2 px-4 rounded shadow">Q2. 비밀번호를 잊어버렸어요. 어떻게 하나요?</button>
+          <p class="faq-answer hidden mt-2 transition-all duration-200">A2. 로그인 페이지에서 '비밀번호 찾기' 링크를 클릭하여 비밀번호를 재설정하실 수 있습니다.</p>
+        </div>
+        <div>
+          <button class="faq-question text-left w-full text-2xl py-2 px-4 rounded shadow">Q3. 문제가 발생했을 때 어디로 문의하나요?</button>
+          <p class="faq-answer hidden mt-2 transition-all duration-200">A3. 문제 발생 시 고객센터로 문의하시거나, 이메일로 문의하실 수 있습니다.</p>
+        </div>
+        <div>
+          <button class="faq-question text-left w-full text-2xl py-2 px-4 rounded shadow">Q4. 회원 탈퇴는 어떻게 하나요?</button>
+          <p class="faq-answer hidden mt-2 transition-all duration-200">A4. 회원 탈퇴는 마이 페이지에서 진행하실 수 있습니다.</p>
+        </div>
+        <div>
+          <button class="faq-question text-left w-full text-2xl py-2 px-4 rounded shadow">Q5. 이미지 변환은 어떻게 하나요?</button>
+          <p class="faq-answer hidden mt-2 transition-all duration-200">A5. 상단의 메뉴의 링크를 통해 하실 수 있습니다.</p>
+        </div>
+      </div>
+      <p class="text-center mt-10 text-lg">추가적으로 궁금한 점이 있으시면 admin@interiorpeople으로 연락주세요.</p>
+    </div>
+
   </main>
 
   <%-include("../includes/footer")%>

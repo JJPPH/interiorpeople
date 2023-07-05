@@ -4,7 +4,6 @@
 </head>
 
 
-
 <body>
   <%-include("../includes/navbar")%>
 
@@ -18,7 +17,7 @@
             <div id="slide" class="slide">
               <% for (postImage of postImages) { %>
               <div class="slide-item">
-                <img src="/<%= postImage.foldername %>/<%= postImage.filename %>" alt="" class="preview-image">
+                <img src="<%=postImage.postImgUrl%>" alt="포스트 이미지" class="preview-image">
               </div>
               <% } %>
             </div>
@@ -36,43 +35,45 @@
         <p><%= post.content %></p>
       </div>
       <div class="flex justify-between mr-5">
-        <%if(user){%>
 
+        <%if(user.id){%>
         <div>
           <button id="like-post-button" data-post-id="<%= post.id %>" class="bg-red-600 text-white px-4 py-2 mr-2 rounded hover:bg-red-400">
             <%= hasLiked ? "좋아요 취소" : "좋아요"%>
           </button>
         </div>
-
         <%}%>
+
         <div class="flex">
-          <%if(user.id === post.authorId){%>
-        <button id="edit-post-button" data-post-id="<%= post.id %>" class="bg-black text-white px-4 py-2 mr-2 rounded hover:bg-gray-700">수정</button>
+          <%if(user && user.id === post.authorId){%>
+        <!--<button id="edit-post-button" data-post-id="<%= post.id %>" class="bg-black text-white px-4 py-2 mr-2 rounded hover:bg-gray-700">수정</button>-->
         <button id="delete-post-button" data-post-id="<%= post.id %>" class="bg-black text-white px-4 py-2 rounded hover:bg-gray-700">삭제</button>
-        <% } %>
+        <%}%>
       </div>
     </div>
 
   </div>
 
   <div class="container mx-auto py-8">
-    <div class="bg-white rounded-lg shadow-md p-6 mt-8">
-      <h3 class="text-xl font-bold mb-4">댓글 작성</h3>
-      <textarea id="comment-textarea" class="w-full rounded-lg p-2 mb-4 resize-none" rows="4" placeholder="댓글을 작성해주세요" required></textarea>
-      <button id="create-comment-button" data-post-id="<%= post.id %>" data-user-id="<%= user.id %>" class="bg-blue-white text-black px-4 py-2 border-2 border-black rounded transition-all duration-300 hover:bg-black hover:text-white">댓글 작성</button>
-    </div>
+      <%if(user.id){%>
+        <div class="bg-white rounded-lg shadow-md p-6 mt-8">
+          <h3 class="text-xl font-bold mb-4">댓글 작성</h3>
+          <textarea id="comment-textarea" class="w-full rounded-lg p-2 mb-4 resize-none" rows="4" placeholder="댓글을 작성해주세요" required></textarea>
+          <button id="create-comment-button" data-post-id="<%= post.id %>" data-user-id="<%= user.id %>" class="bg-blue-white text-black px-4 py-2 border-2 border-black rounded transition-all duration-300 hover:bg-black hover:text-white">댓글 작성</button>
+        </div>
+        <%}%>
 
-    <div class="bg-white rounded-lg shadow-md p-6 mt-8">
-      <h3 class="text-xl font-bold mb-4">댓글</h3>
-      <ul id="comment-list">
-        <% if (comments.length === 0) { %>
+      <div class="bg-white rounded-lg shadow-md p-6 mt-8">
+        <h3 class="text-xl font-bold mb-4">댓글</h3>
+        <ul id="comment-list">
+          <% if (comments.length === 0) { %>
         <p>댓글이 없습니다.</p>
         <% } else { %>
         <% comments.forEach(comment => { %>
         <li class="mb-5 p-3 rounded-md border-2 border-gray-400">
           <p class="text-black font-bold mb-4"><%= comment.commentContent %></p>
           <div class='flex justify-between mb-2'>
-            <p class="text-sm text-gray-600"><%= comment["User.name"] %></p>
+            <p class="text-sm text-gray-600"><%= comment.User.name %></p>
             <p class="text-sm text-gray-600"><%= comment.createdAt.toLocaleString()%></p>
           </div>
           <% if (comment.commenterId === user.id) { %>
@@ -80,10 +81,10 @@
           <% } %>
         </li>
         <% }) %>
-      </ul>
-      <% } %>
+        </ul>
+        <% } %>
+      </div>
     </div>
-  </div>
   </div>
 
 

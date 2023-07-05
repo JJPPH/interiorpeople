@@ -12,40 +12,26 @@ class User extends Sequelize.Model {
         email: {
           type: DataTypes.STRING(30),
           allowNull: false,
-          // unique: true,
+          unique: true,
         },
         password: {
           type: DataTypes.STRING(100),
           allowNull: true,
         },
-        profileImg: {
+        profileImgUrl: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          defaultValue: '/basicProfileImg/basic-user-image.png',
+        },
+        profileImgKey: {
           type: DataTypes.STRING,
           allowNull: true,
-          defaultValue: null,
-        },
-        // loginMethod:{},
-        // snsId:{},
-        // age: {
-        //   type: Sequelize.INTEGER.UNSIGNED,
-        //   allowNull: false,
-        // },
-        createdAt: {
-          allowNull: false,
-          type: Sequelize.DATE,
-          defaultValue: Sequelize.fn('NOW'),
-        },
-        updatedAt: {
-          allowNull: false,
-          type: Sequelize.DATE,
-          defaultValue: Sequelize.fn('NOW'),
+          default: null,
         },
       },
       {
         sequelize,
         timestamps: true,
-        underscored: false,
-        modelName: 'User',
-        tableName: 'users',
         paranoid: true,
         charset: 'utf8',
         collate: 'utf8_general_ci',

@@ -1,5 +1,5 @@
-const deleteAccountButtonElement = document.getElementById('delete-account-button')
-deleteAccountButtonElement.addEventListener('click', () => {
+const deleteAccountButton = document.getElementById('delete-account-button')
+deleteAccountButton.addEventListener('click', () => {
   const deleteAccountCheck = confirm('정말로 탈퇴하시겠습니까?')
 
   if (deleteAccountCheck) {
@@ -10,7 +10,7 @@ deleteAccountButtonElement.addEventListener('click', () => {
       .then((data) => {
         if (data.success) {
           alert('계정이 삭제되었습니다.')
-          window.location.href = '/' // 홈페이지 URL로 변경해야 합니다.
+          window.location.href = '/'
         } else {
           alert('계정 삭제에 실패했습니다.')
         }

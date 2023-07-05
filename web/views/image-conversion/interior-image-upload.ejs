@@ -1,0 +1,39 @@
+<%-include("../includes/head",{pageTitle})%>
+<script src="/script/interiorImageUpload.js" defer></script>
+</head>
+
+
+<body>
+  <%-include("../includes/navbar")%>
+
+  <main>
+
+    <h1 class="text-3xl font-bold mt-5 ml-3 mb-7">Interior Image Upload</h1>
+    <div class="container mx-auto px-4 py-8 bg-white rounded-lg shadow-lg p-6">
+
+      <%if(errorMessage && errorMessage.length>0){%>
+      <div class="bg-white border border-red-500 text-black text-center rounded-md px-4 py-2 mb-4">
+        <p style="font-weight: bold; color: red;"><%=errorMessage[0]%></p>
+      </div>
+      <%}%>
+
+      <div id="image-preview" class="relative hidden">
+        <img class="h-auto mx-auto mb-3 object-cover rounded" />
+      </div>
+
+      <form action="/image-conversion/segmentation" method="POST" enctype="multipart/form-data">
+        <div>
+          <input type="file" id="image-upload" name="image" class="hidden">
+          <label for="image-upload" class="flex items-center justify-center bg-black w-full h-32 mb-5 rounded-lg border-2 border-black hover:bg-gray-700 hover:border-gray-700 text-white font-semibold py-3 px-6 cursor-pointer">
+            이미지 업로드
+          </label>
+          <div class="flex justify-end">
+            <button id="next-button" class="px-4 py-2 bg-black text-white rounded-md disabled:opacity-50" disabled>다음으로</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+  </main>
+
+  <%-include("../includes/footer")%>

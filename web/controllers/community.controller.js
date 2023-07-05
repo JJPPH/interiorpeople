@@ -1,17 +1,20 @@
 const { validationResult } = require('express-validator')
 const { Op } = require('sequelize')
+const { DeleteObjectCommand } = require('@aws-sdk/client-s3')
+
+const s3Client = require('../aws')
 
 const Post = require('../models/post.model')
 const PostImage = require('../models/postImage.model')
 const User = require('../models/user.model')
 const Comment = require('../models/comment.model')
 
-// &
+// = 모든 포스트 가져오기
 exports.getAllPosts = async (req, res) => {
   res.status(200).render('community/allPosts', { pageTitle: 'all-posts' })
 }
 
-// &
+// = 다음 포스트 가져오기
 exports.getNextPosts = async (req, res) => {
   try {
     const lastPostId = req.query['last-post-id']
@@ -19,25 +22,25 @@ exports.getNextPosts = async (req, res) => {
     const posts = await Post.findAll({
       order: [['id', 'DESC']],
       limit: 10,
-      attributes: ['title', 'content', 'id', 'createdAt'],
+      attributes: ['title', 'content', 'id', 'createdAt', 'likeCount'],
       where: lastPostId ? { id: { [Op.lt]: lastPostId } } : null,
       include: [
         {
           model: PostImage,
-          attributes: ['foldername', 'filename', 'originalname'],
+          attributes: ['postImgUrl', 'originalname'],
         },
         {
           model: User,
           attributes: [
             ['name', 'authorName'],
-            ['profileImg', 'authorProfileImg'],
+            ['profileImgUrl', 'authorProfileImgUrl'],
           ],
         },
       ],
     })
 
     if (!posts || posts.length === 0) {
-      return res.status(304).json({ posts, success: true })
+      return res.status(204).end()
     }
 
     return res.status(200).json({ posts, success: true })
@@ -46,16 +49,13 @@ exports.getNextPosts = async (req, res) => {
   }
 }
 
-// &
+// = 새 포스트 작성 화면 가져오기
 exports.getCreatePost = (req, res) => {
   const errorMessage = req.flash('errorMessage')
-  if (errorMessage && errorMessage.length > 0) {
-    res.status(422)
-  }
   res.render('community/createPost', { pageTitle: 'create post', errorMessage })
 }
 
-// &
+// = 새 포스트 작성 처리하기
 exports.postCreatePost = async (req, res, next) => {
   const validationErrors = validationResult(req)
   if (!validationErrors.isEmpty()) {
@@ -74,9 +74,9 @@ exports.postCreatePost = async (req, res, next) => {
     const post = await Post.create({ authorId: req.user.id, title, content })
     postImages.forEach(async (postImage) => {
       await post.createPostImage({
-        originalname: postImage.filename,
-        filename: postImage.filename,
-        foldername: req.imgFolderName,
+        originalname: postImage.originalname,
+        postImgUrl: postImage.location,
+        postImgKey: postImage.key,
       })
     })
 
@@ -86,7 +86,7 @@ exports.postCreatePost = async (req, res, next) => {
   }
 }
 
-// &
+// = 좋아요 처리하기
 exports.patchLike = async (req, res, next) => {
   try {
     const { postId } = req.params
@@ -100,17 +100,22 @@ exports.patchLike = async (req, res, next) => {
 
     if (hasLiked) {
       await post.removeLiker(req.user.id)
+      post.likeCount -= 1
+      await post.save()
       return res.json({ message: '좋아요가 취소되었습니다.', success: true, like: false })
     }
 
     await post.addLiker(req.user.id)
+    post.likeCount += 1
+    await post.save()
+
     return res.json({ message: '좋아요가 성공하였습니다.', success: true, like: true })
   } catch (error) {
     return next(error)
   }
 }
 
-// &
+// = 포스트 상세 가져오기
 exports.getPost = async (req, res, next) => {
   try {
     const { postId } = req.params
@@ -126,16 +131,20 @@ exports.getPost = async (req, res, next) => {
       throw new Error('유효하지 않은 포스트입니다.')
     }
 
-    const postImages = await PostImage.findAll({ where: { postId }, raw: true })
+    const postImages = await PostImage.findAll({ where: { postId } })
 
     const comments = await Comment.findAll({
       where: { postId },
       order: [['createdAt', 'ASC']],
       include: [{ model: User, attributes: ['name'] }],
-      raw: true,
     })
 
-    const hasLiked = await post.hasLiker(req.user.id)
+    let hasLiked
+    if (req.user) {
+      hasLiked = await post.hasLiker(req.user.id)
+    } else {
+      hasLiked = false
+    }
 
     return res.render('community/postDetail', {
       post,
@@ -149,9 +158,7 @@ exports.getPost = async (req, res, next) => {
   }
 }
 
-// &
-// TODO : COMMENT가 남아 있을 경우 같이 삭제
-// TODO : 포스트 이미지까지 같이 삭제
+// = 포스트 삭제 처리하기
 exports.deletePost = async (req, res, next) => {
   try {
     const { postId } = req.params
@@ -168,6 +175,17 @@ exports.deletePost = async (req, res, next) => {
       throw new Error('권한이 없습니다.')
     }
 
+    const postImages = await PostImage.findAll({ where: { postId } })
+
+    postImages.forEach(async (postImage) => {
+      await s3Client.send(
+        new DeleteObjectCommand({
+          Bucket: process.env.S3_BUCKET_NAME,
+          Key: postImage.postImgKey,
+        })
+      )
+    })
+
     await post.destroy()
 
     res.status(200).json({ message: '성공적으로 삭제되었습니다.', success: true })
@@ -181,35 +199,34 @@ exports.deletePost = async (req, res, next) => {
 }
 
 // &
-exports.getEditPost = async (req, res, next) => {
-  try {
-    const { postId } = req.params
+// exports.getEditPost = async (req, res, next) => {
+//   try {
+//     const { postId } = req.params
 
-    const post = await Post.findByPk(postId, {
-      include: {
-        model: User,
-        where: { id: req.user.id },
-      },
-      raw: true,
-    })
+//     const post = await Post.findByPk(postId, {
+//       include: {
+//         model: User,
+//         where: { id: req.user.id },
+//       },
+//     })
 
-    if (!post) {
-      throw new Error('해당 유저는 포스트를 수정할 수 없습니다.')
-    }
+//     if (!post) {
+//       throw new Error('해당 유저는 포스트를 수정할 수 없습니다.')
+//     }
 
-    return res.render('community/editPost', { pageTitle: 'edit post', post })
-  } catch (error) {
-    return next(error)
-  }
-}
+//     return res.render('community/editPost', { pageTitle: 'edit post', post })
+//   } catch (error) {
+//     return next(error)
+//   }
+// }
 
-// &
+// = 새 댓글 작성 처리하기
 exports.postComments = async (req, res, next) => {
   try {
     const { postId } = req.params
     const { comment } = req.body
 
-    const post = await Post.findByPk(postId, { raw: true })
+    const post = await Post.findByPk(postId)
 
     if (!post) {
       throw new Error('존재하지 않는 포스트입니다.')
@@ -221,7 +238,6 @@ exports.postComments = async (req, res, next) => {
       where: { postId },
       order: [['createdAt', 'ASC']],
       include: [{ model: User, attributes: ['name'] }],
-      raw: true,
     })
 
     return res.json({ comments, message: '댓글이 성공적으로 생성되었습니다', success: true })
@@ -230,7 +246,7 @@ exports.postComments = async (req, res, next) => {
   }
 }
 
-// &
+// = 댓글 삭제 처리하기
 exports.deleteComment = async (req, res, next) => {
   try {
     const { postId, commentId } = req.params
@@ -245,7 +261,6 @@ exports.deleteComment = async (req, res, next) => {
       where: { postId },
       order: [['createdAt', 'ASC']],
       include: [{ model: User, attributes: ['name'] }],
-      raw: true,
     })
 
     return res.json({ comments, message: '댓글이 성공적으로 삭제되었습니다', success: true })

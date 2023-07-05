@@ -25,7 +25,6 @@ if (deletePostButton) {
         throw new Error(responseData.message)
       }
     } catch (error) {
-      // alert(error.message)
       alert('잠시 후 다시 시도해 주시길 바랍니다.')
     }
   })
@@ -77,7 +76,6 @@ likeButton.addEventListener('click', async () => {
       throw new Error(responseData.message)
     }
   } catch (error) {
-    // alert(error.message)
     alert('잠시 후 다시 시도해 주시길 바랍니다.')
   }
 })
@@ -103,7 +101,7 @@ const refreshComments = (userId, comments) => {
 
         const commentAuthor = document.createElement('p')
         commentAuthor.classList.add('text-sm', 'text-gray-600')
-        commentAuthor.textContent = `${comment['User.name']}`
+        commentAuthor.textContent = comment.User.name
 
         const commentCreatedAt = document.createElement('p')
         commentCreatedAt.classList.add('text-sm', 'text-gray-600')
@@ -136,7 +134,6 @@ const refreshComments = (userId, comments) => {
                 throw new Error(responseData.message)
               }
             } catch (error) {
-              // alert(error.message)
               alert('잠시 후 다시 시도해 주시길 바랍니다.')
             }
           })
@@ -153,9 +150,9 @@ const refreshComments = (userId, comments) => {
 }
 
 // 댓글 삭제 버튼
-const deleteCommentButtonElements = document.querySelectorAll('.delete-comment-button')
-for (let i = 0; i < deleteCommentButtonElements.length; i += 1) {
-  deleteCommentButtonElements[i].addEventListener('click', async (event) => {
+const deleteCommentButtons = document.querySelectorAll('.delete-comment-button')
+for (let i = 0; i < deleteCommentButtons.length; i += 1) {
+  deleteCommentButtons[i].addEventListener('click', async (event) => {
     const { commentId, postId, userId } = event.target.dataset
 
     try {

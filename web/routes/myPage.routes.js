@@ -1,7 +1,6 @@
 const express = require('express')
 const { body } = require('express-validator')
 
-/** 컨트롤러 */
 const {
   getEditProfile,
   patchEditProfile,
@@ -11,11 +10,9 @@ const {
   patchEditPassword,
   getDeleteAccount,
   deleteAccount,
-  // getMyPost,
 } = require('../controllers/myPage.controller')
 
-/** 미들웨어 */
-const { isLoggedIn } = require('../middlewares/checkAuth.middleware')
+const { isLoggedIn } = require('../middlewares/authentication.middleware')
 const multerConfig = require('../middlewares/multerConfig.middleware')
 
 const uploadUserProfileImg = multerConfig('userProfileImg')
@@ -25,7 +22,7 @@ const router = express.Router()
 // = 유저 프로필 이미지 변경 화면 보여주기
 router.get('/edit-profile', isLoggedIn, getEditProfile)
 
-//  유저 프로필 이미지 변경 처리하기
+// = 유저 프로필 이미지 변경 처리하기
 router.patch('/edit-profile', isLoggedIn, uploadUserProfileImg.single('profile-img'), patchEditProfile)
 
 // = 유저 계정 관리 화면 보여주기
@@ -68,8 +65,5 @@ router.get('/delete-account', isLoggedIn, getDeleteAccount)
 
 // = 유저 계정 탈퇴 처리하기
 router.delete('/delete-account', isLoggedIn, deleteAccount)
-
-// = 유저의 포스트 보여주기
-// router.get('/:userId', isLoggedIn, getMyPost)
 
 module.exports = router

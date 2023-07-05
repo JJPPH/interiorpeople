@@ -1,7 +1,6 @@
 const express = require('express')
 const { body } = require('express-validator')
 
-/** 컨트롤러 */
 const {
   getLogin,
   postLogin,
@@ -14,11 +13,9 @@ const {
   postNewPassword,
 } = require('../controllers/auth.controller')
 
-/** 데이터베이스 */
 const User = require('../models/user.model')
 
-/** 미들웨어 */
-const { isLoggedIn, isNotLoggedIn } = require('../middlewares/checkAuth.middleware')
+const { isLoggedIn, isNotLoggedIn } = require('../middlewares/authentication.middleware')
 
 const router = express.Router()
 

@@ -1,7 +1,8 @@
 const Sequelize = require('sequelize')
+require('dotenv').config()
 
-const env = process.env.NODE_ENV || 'development'
-const config = require('../config/config.json')[env]
+const env = process.env.NODE_ENV
+const config = require('../config/config')[env]
 
 const User = require('./user.model')
 const Post = require('./post.model')

@@ -1,6 +1,5 @@
 const express = require('express')
 
-/** 컨트롤러 */
 const { getIndex } = require('../controllers/base.controller')
 
 const router = express.Router()

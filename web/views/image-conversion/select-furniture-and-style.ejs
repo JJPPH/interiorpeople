@@ -1,0 +1,116 @@
+<%-include("../includes/head",{pageTitle})%>
+
+<style>
+  input[type="radio"]:checked+label {
+    background-color: #ffffff;
+    color: #000000;
+  }
+
+  input[type="checkbox"]:checked+label {
+    background-color: #ffffff;
+    color: #000000;
+  }
+</style>
+</head>
+
+
+<body>
+  <%-include("../includes/navbar")%>
+
+  <main>
+    <h1 class="text-3xl font-bold mt-5 ml-3 mb-7">Select furniture And Style</h1>
+    <div class="container mx-auto px-4 py-8 bg-white rounded-lg shadow-lg">
+      <div class="container mx-auto p-4">
+        <h2 class='mb-4 text-xl font-bold'>파악한 가구</h2>
+        <img src="/machineLearning/<%=user.id%>/<%=imageFolderName%>/box/box.jpg" alt="이미지" class="h-auto mx-auto">
+
+        <form method="POST" action="/image-conversion/local-style-transfer">
+          <input type="hidden" value="<%=imageFolderName%>" name="imageFolderName">
+          <h2 class='mt-4 mb-4 text-xl font-bold'>가구 선택</h2>
+
+          <div class="flex flex-wrap items-center mt-4 mb-4">
+            <%for(let i=0;i<bboxLabels.length;i++){%>
+            <input type="checkbox" id="<%=bboxLabels[i].name%>" name="furniture" class="hidden" value="<%=bboxLabels[i].value%>" />
+            <label for="<%=bboxLabels[i].name%>" class="px-4 py-2 mr-5 mb-4 bg-black border-2 border-black text-white font-bold rounded-md cursor-pointer transition-colors duration-100 ease-in-out">
+              <%=bboxLabels[i].name%>
+            </label>
+            <%}%>
+        </div>
+
+        <h2 class='mb-4 text-xl font-bold'>스타일 선택</h2>
+        <div class="flex items-center mt-4 mb-4">
+          <input type="radio" id="classic" name="style" class="hidden" value="classic" />
+          <label for="classic" class="px-4 py-2 mr-5 bg-black border-2 border-black text-white font-bold rounded-md cursor-pointer transition-colors duration-100 ease-in-out">
+            클래식
+          </label>
+          <input type="radio" id="modern" name="style" class="hidden" value="modern" />
+          <label for="modern" class="px-4 py-2 mr-5 bg-black border-2 border-black text-white font-bold rounded-md cursor-pointer transition-colors duration-100 ease-in-out">
+            모던
+          </label>
+          <input type="radio" id="northern_europe" name="style" class="hidden" value="northern_europe" />
+          <label for="northern_europe" class="px-4 py-2 mr-5 bg-black border-2 border-black text-white font-bold rounded-md cursor-pointer transition-colors duration-100 ease-in-out">
+            북유럽풍
+            </label>
+          <input type="radio" id="natural" name="style" class="hidden" value="natural" />
+          <label for="natural" class="px-4 py-2 mr-5 bg-black border-2 border-black text-white font-bold rounded-md cursor-pointer transition-colors duration-100 ease-in-out">
+            자연
+            </label>
+          <input type="radio" id="vintage" name="style" class="hidden" value="vintage" />
+          <label for="vintage" class="px-4 py-2 mr-5 bg-black border-2 border-black text-white font-bold rounded-md cursor-pointer transition-colors duration-100 ease-in-out">
+            빈티지
+          </label>
+        </div>
+
+        <h2 class='mb-4 text-xl font-bold'>컬러 선택</h2>
+        <div class="flex items-center mt-4 mb-4">
+          <input type="radio" id="black" name="color" class="hidden" value="black" />
+          <label for="black" class="px-4 py-2 mr-5 bg-black border-2 border-black text-white font-bold rounded-md cursor-pointer transition-colors duration-100 ease-in-out">
+            블랙
+          </label>
+          <input type="radio" id="blue" name="color" class="hidden" value="blue" />
+          <label for="blue" class="px-4 py-2 mr-5 bg-black border-2 border-black text-white font-bold rounded-md cursor-pointer transition-colors duration-100 ease-in-out">
+            블루
+          </label>
+          <input type="radio" id="brown" name="color" class="hidden" value="brown" />
+          <label for="brown" class="px-4 py-2 mr-5 bg-black border-2 border-black text-white font-bold rounded-md cursor-pointer transition-colors duration-100 ease-in-out">
+            브라운
+          </label>
+          <input type="radio" id="gray" name="color" class="hidden" value="gray" />
+          <label for="gray" class="px-4 py-2 mr-5 bg-black border-2 border-black text-white font-bold rounded-md cursor-pointer transition-colors duration-100 ease-in-out">
+            그레이
+          </label>
+          <input type="radio" id="red" name="color" class="hidden" value="red" />
+          <label for="red" class="px-4 py-2 mr-5 bg-black border-2 border-black text-white font-bold rounded-md cursor-pointer transition-colors duration-100 ease-in-out">
+            레드
+          </label>
+          <input type="radio" id="white" name="color" class="hidden" value="white" />
+          <label for="white" class="px-4 py-2 mr-5 bg-black border-2 border-black text-white font-bold rounded-md cursor-pointer transition-colors duration-100 ease-in-out">
+            화이트
+          </label>
+        </div>
+
+        <h2 class='mb-4 text-xl font-bold'>변환 강도 선택</h2>
+        <div class="flex items-center mt-4 mb-11">
+          <input type="radio" id="Low" name="intensity" class="hidden" value="Low" />
+          <label for="Low" class="px-4 py-2 mr-5 bg-black border-2 border-black text-white font-bold rounded-md cursor-pointer transition-colors duration-100 ease-in-out">
+            약함
+          </label>
+          <input type="radio" id="Middle" name="intensity" class="hidden" value="Middle" />
+          <label for="Middle" class="px-4 py-2 mr-5 bg-black border-2 border-black text-white font-bold rounded-md cursor-pointer transition-colors duration-100 ease-in-out">
+            중간
+          </label>
+          <input type="radio" id="High" name="intensity" class="hidden" value="High" />
+          <label for="High" class="px-4 py-2 mr-5 bg-black border-2 border-black text-white font-bold rounded-md cursor-pointer transition-colors duration-100 ease-in-out">
+            강함
+          </label>
+        </div>
+
+      <button type="submit" class="bg-white hover:bg-gray-900 hover:text-white text-black font-bold py-2 px-4 mb-3 border-2 border-black rounded float-right">
+        다음으로
+      </button>
+      </form>
+      </div>
+    </div>
+  </main>
+
+  <%-include("../includes/footer")%>

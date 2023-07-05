@@ -3,8 +3,8 @@ const passport = require('passport')
 
 module.exports = (req, res, next) => {
   if (!req.isAuthenticated()) {
-    req.body.email = '11@test.com'
-    req.body.password = '11'
+    req.body.email = '1@test.com'
+    req.body.password = '1'
 
     passport.authenticate('local', async (authError, user) => {
       if (authError) {

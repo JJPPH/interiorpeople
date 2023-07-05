@@ -37,6 +37,7 @@
 }
 
 #support-dropdown {
+  z-index: 1000;
 }
 
 #support-btn:hover {

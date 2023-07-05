@@ -7,11 +7,12 @@
   <%-include("../includes/navbar")%>
   <main>
 
-
     <header>
       <div class="container mx-auto px-4 py-6 flex items-center justify-end">
+        <%if(user.id){%>
         <a href="/community/create-post" class="bg-black hover:bg-gray-900 text-white px-3 py-1 rounded-md text-base border-2 border-black">포스트 작성</a>
       </div>
+      <%}%>
     </header>
 
     <div id="post-container" class="container mx-auto flex flex-col items-center">
@@ -29,8 +30,8 @@
                   </div>
                   <div class='ml-2'>123</div>
                 </div>
-                <p>abc</p>
-                <p>좋아요: 좋아요 수</p>
+                <p></p>
+                <p></p>
               </div>
             </div>
           </div>
@@ -41,8 +42,6 @@
   </main>
 
 
-  <script>
 
-  </script>
 
   <%-include("../includes/footer")%>

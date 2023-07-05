@@ -1,37 +1,33 @@
 <nav class="bg-white">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+  <div class="mx-auto px-4">
     <div class="flex items-center justify-between h-12">
-      <div class="flex-shrink-0 flex items-center">
+      <div class="items-center">
         <a href="/" class="text-black text-lg font-extrabold">InteriorPeople</a>
       </div>
 
-      <div class="md:block">
+      <div class="block">
         <div class="ml-10 flex items-baseline space-x-1">
           <a href="/" class="nav-link">Home</a>
-          <a href="/#" class="nav-link">About</a>
+          <a href="/image-conversion" class="nav-link">Interior Change</a>
           <a href="/community/all-posts" class="nav-link">Community</a>
-          <div class="relative" id="support-btn">
+          <div class="relative z-99" id="support-btn">
             <p class="nav-link">Support</p>
             <div id="support-dropdown" class="absolute bg-white py-2 w-24 rounded-md shadow-lg hidden">
               <a href="/support/faq" class="block px-4 py-2 text-xl text-center text-gray-800 hover:bg-gray-200">FAQ</a>
-              <a href="/support/guide" class="block px-4 py-2 text-xl text-center text-gray-800 hover:bg-gray-200">Guide</a>
+              <!--<a href="/support/guide" class="block px-4 py-2 text-xl text-center text-gray-800 hover:bg-gray-200">Guide</a>-->
             </div>
           </div>
         </div>
       </div>
 
-      <div class="md:block">
-        <div class="ml-4 flex items-center md:ml-6">
+      <div class="block">
+        <div class="ml-4 flex items-center">
 
           <!-- 사용자가 로그인한 경우 -->
-          <%if(user){%>
+          <%if(user && user.id){%>
           <div class="relative" id="user-info">
             <button class="w-7 h-7 rounded-full flex items-center justify-center border-2 border-black overflow-hidden">
-              <% if (user.profileImg) { %>
-              <img src="<%= user.profileImg %>" alt="유저 프로필 이미지" />
-              <% } else { %>
-              <img src="/userProfileImg/basic-user-image.png" alt="유저 프로필 이미지" class="rounded-full mt-2" />
-              <% } %>
+              <img src="<%= user.profileImgUrl %>" alt="유저 프로필 이미지" />
             </button>
 
             <div id="my-info-menu" class="hidden absolute right-0 mt-2 w-24 bg-white border border-gray-300 rounded shadow-lg left-0">
@@ -45,11 +41,15 @@
 
             <!-- 사용자가 로그인하지 않은 경우 -->
             <%}else{%>
-            <a href="/auth/login" class="nav-link">Login</a>
-            <a href="/auth/signup" class="nav-link">Sign Up</a>
+            <div class="relative">
+              <a href="/auth/login" class="nav-link">Login</a>
+              <a href="/auth/signup" class="nav-link">Sign Up</a>
+            </div>
             <%}%>
         </div>
       </div>
     </div>
+
   </div>
 </nav>
+    <div class="mt-2 mb-2 h-0.5 bg-black"></div>

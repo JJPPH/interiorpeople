@@ -1,5 +1,5 @@
-const editUserNameElement = document.getElementById('edit-username-button')
-editUserNameElement.addEventListener('click', () => {
+const editUserName = document.getElementById('edit-username-button')
+editUserName.addEventListener('click', () => {
   const newUsername = document.getElementById('username').value
   if (!newUsername || newUsername.length === 0) {
     return
@@ -25,8 +25,8 @@ editUserNameElement.addEventListener('click', () => {
     })
 })
 
-const editEmailElement = document.getElementById('edit-email-button')
-editEmailElement.addEventListener('click', () => {
+const editEmail = document.getElementById('edit-email-button')
+editEmail.addEventListener('click', () => {
   const newEmail = document.getElementById('email').value
   if (!newEmail || newEmail.length === 0) {
     return
@@ -52,8 +52,8 @@ editEmailElement.addEventListener('click', () => {
     })
 })
 
-const editPasswordElement = document.getElementById('edit-password-button')
-editPasswordElement.addEventListener('click', () => {
+const editPassword = document.getElementById('edit-password-button')
+editPassword.addEventListener('click', () => {
   const currentPassword = document.getElementById('current-password').value
   const newPassword = document.getElementById('new-password').value
   const confirmPassword = document.getElementById('confirm-password').value

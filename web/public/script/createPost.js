@@ -2,12 +2,11 @@ const imageUpload = document.getElementById('imageUpload')
 const imagePreview = document.getElementById('image-preview')
 const slideContainer = document.getElementById('slideContainer')
 const slide = document.getElementById('slide')
-const prevButton = document.getElementById('prevButton')
-const nextButton = document.getElementById('nextButton')
 
 let currentSlideIndex = 0
 let totalSlides = 0
 
+// 이미지 업로드
 imageUpload.addEventListener('change', () => {
   imagePreview.classList.remove('hidden')
   slide.innerHTML = ''
@@ -43,6 +42,8 @@ imageUpload.addEventListener('change', () => {
   slide.style.transform = `translateX(0)`
 })
 
+// 이미지 슬라이드 이전 버튼
+const prevButton = document.getElementById('prevButton')
 prevButton.addEventListener('click', () => {
   const slideWidth = slideContainer.offsetWidth
   if (currentSlideIndex > 0) {
@@ -51,6 +52,8 @@ prevButton.addEventListener('click', () => {
   slide.style.transform = `translateX(-${currentSlideIndex * slideWidth}px)`
 })
 
+// 이미지 슬라이드 다음 버튼
+const nextButton = document.getElementById('nextButton')
 nextButton.addEventListener('click', () => {
   const slideWidth = slideContainer.offsetWidth
   if (currentSlideIndex < totalSlides - 1) {

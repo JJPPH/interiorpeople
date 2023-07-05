@@ -6,5 +6,5 @@
   "[html]": {
     "editor.defaultFormatter": "j69.ejs-beautify"
   },
-  "cSpell.words": ["interiorpeople", "postimages", "sendinblue"]
+  "cSpell.words": ["bbox", "interiorpeople", "normalised", "postimages", "sendinblue", "yolact"]
 }

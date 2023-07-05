@@ -1,8 +1,9 @@
-const fs = require('fs')
-const path = require('path')
-
 const { validationResult } = require('express-validator')
 const bcrypt = require('bcrypt')
+const { DeleteObjectCommand } = require('@aws-sdk/client-s3')
+
+const s3Client = require('../aws')
+
 require('dotenv').config()
 
 const User = require('../models/user.model')
@@ -19,8 +20,18 @@ exports.patchEditProfile = async (req, res, next) => {
     if (!profileImg) {
       return res.status(400).json({ message: '프로필 이미지를 업로드해주시길 바랍니다.', success: false })
     }
-
-    await User.update({ profileImg: `/userProfileImg/${profileImg.filename}` }, { where: { id: req.user.id } })
+    const user = await User.findByPk(req.user.id)
+    if (user.profileImgKey) {
+      await s3Client.send(
+        new DeleteObjectCommand({
+          Bucket: 'interiorpeople',
+          Key: user.profileImgKey,
+        })
+      )
+    }
+    user.profileImgUrl = profileImg.location
+    user.profileImgKey = profileImg.key
+    await user.save()
 
     return res.json({ message: '프로필 변경 성공', success: true })
   } catch (error) {
@@ -42,9 +53,8 @@ exports.patchEditUsername = async (req, res, next) => {
     }
 
     const { newUsername } = req.body
-    const { id: userId } = req.user
 
-    await User.update({ name: newUsername }, { where: { id: userId } })
+    await User.update({ name: newUsername }, { where: { id: req.user.id } })
 
     return res.json({ message: '이름 변경 성공', success: true })
   } catch (error) {
@@ -61,9 +71,8 @@ exports.patchEditEmail = async (req, res, next) => {
     }
 
     const { newEmail } = req.body
-    const { id: userId } = req.user
 
-    await User.update({ email: newEmail }, { where: { id: userId } })
+    await User.update({ email: newEmail }, { where: { id: req.user.id } })
 
     return res.json({ message: '이메일 변경 성공', success: true })
   } catch (error) {
@@ -80,9 +89,8 @@ exports.patchEditPassword = async (req, res, next) => {
     }
 
     const { currentPassword, newPassword } = req.body
-    const { id: userId } = req.user
 
-    const user = await User.findByPk(userId)
+    const user = await User.findByPk(req.user.id)
     const passwordCheck = await bcrypt.compare(currentPassword, user.password)
     if (!passwordCheck) {
       return res.status(401).json({ message: validationErrors.array()[0].msg, success: false })
@@ -108,15 +116,13 @@ exports.deleteAccount = async (req, res, next) => {
   try {
     const user = await User.findByPk(req.user.id)
 
-    if (user.profileImg) {
-      const filePath = path.join(__dirname, '..', 'uploads', user.profileImg)
-      fs.unlink(filePath, (err) => {
-        if (err) {
-          console.error('파일 삭제 오류:', err)
-          return
-        }
-        console.log('파일이 성공적으로 삭제되었습니다.')
-      })
+    if (user.profileImgKey) {
+      await s3Client.send(
+        new DeleteObjectCommand({
+          Bucket: process.env.S3_BUCKET_NAME,
+          Key: user.profileImgKey,
+        })
+      )
     }
 
     await user.destroy()
@@ -134,3 +140,13 @@ exports.deleteAccount = async (req, res, next) => {
     return next(error)
   }
 }
+
+// = 나의 이미지 보여주기
+// exports.getMyImages = async (req, res, next) => {
+//   try {
+//     const images = await ImageConversion.find({ userId: req.user.id }).select(['_id', 'imageFolderName'])
+//     res.render('my-page/my-images', { images })
+//   } catch (error) {
+//     next(error)
+//   }
+// }

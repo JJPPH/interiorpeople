@@ -4,6 +4,6 @@ exports.getFAQ = (req, res) => {
 }
 
 // = guide 화면 보여주기
-exports.getGuide = (req, res) => {
-  res.render('support/guide', { pageTitle: 'guide' })
-}
+// exports.getGuide = (req, res) => {
+//   res.render('support/guide', { pageTitle: 'guide' })
+// }

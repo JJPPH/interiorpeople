@@ -12,7 +12,8 @@ const setPassportConfig = () => {
   passport.deserializeUser(async (userId, done) => {
     try {
       const user = await User.findByPk(userId)
-      done(null, user)
+      const { id, profileImgUrl } = user
+      done(null, { id, profileImgUrl })
     } catch (error) {
       done(error)
     }

@@ -1,21 +1,21 @@
 // 유저 정보 버튼 이벤트
-const userInformationBtnElement = document.getElementById('user-info')
+const userInformationButton = document.getElementById('user-info')
 
-if (userInformationBtnElement) {
-  userInformationBtnElement.addEventListener('click', () => {
-    const userInfoDropdownMenuElements = userInformationBtnElement.querySelector('.absolute')
+if (userInformationButton) {
+  userInformationButton.addEventListener('click', () => {
+    const userInfoDropdownMenuElements = userInformationButton.querySelector('.absolute')
     userInfoDropdownMenuElements.classList.toggle('hidden')
   })
 }
 
 // 서포트 버튼 드롭다운 메뉴 이벤트
-const supportBtnElement = document.getElementById('support-btn')
-const supportDropdownElement = document.getElementById('support-dropdown')
+const supportButton = document.getElementById('support-btn')
+const supportDropdown = document.getElementById('support-dropdown')
 
-supportBtnElement.addEventListener('mouseover', () => {
-  supportDropdownElement.classList.remove('hidden')
+supportButton.addEventListener('mouseover', () => {
+  supportDropdown.classList.remove('hidden')
 })
 
-supportBtnElement.addEventListener('mouseout', () => {
-  supportDropdownElement.classList.add('hidden')
+supportButton.addEventListener('mouseout', () => {
+  supportDropdown.classList.add('hidden')
 })
