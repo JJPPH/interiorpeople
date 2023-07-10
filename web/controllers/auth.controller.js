@@ -69,7 +69,6 @@ exports.postSignup = async (req, res, next) => {
 
 exports.postLogout = (req, res, next) => {
   req.logout(() => {
-    res.clearCookie('connectID')
     req.session.destroy((error) => {
       if (error) {
         return next(error)
