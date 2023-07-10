@@ -8,13 +8,11 @@ const User = require('../models/user.model')
 const redisClient = require('../utils/redisClient')
 const emailTransporter = require('../utils/nodemailerTransport')
 
-// = 로그인 화면 보여주기
 exports.getLogin = (req, res) => {
   const errorMessage = req.flash('errorMessage')
   res.render('auth/login', { pageTitle: 'Login', errorMessage })
 }
 
-// = 로그인 처리하기
 exports.postLogin = (req, res, next) => {
   const validationErrors = validationResult(req)
   if (!validationErrors.isEmpty()) {
@@ -41,13 +39,11 @@ exports.postLogin = (req, res, next) => {
   })(req, res, next)
 }
 
-// = 회원가입 화면 보여주기
 exports.getSignup = (req, res) => {
   const errorMessage = req.flash('errorMessage')
   res.render('auth/signup', { pageTitle: 'Signup', errorMessage })
 }
 
-// = 회원가입 처리하기
 exports.postSignup = async (req, res, next) => {
   const { username, email, password } = req.body
   const validationErrors = validationResult(req)
@@ -71,7 +67,6 @@ exports.postSignup = async (req, res, next) => {
   }
 }
 
-// = 로그아웃 처리하기
 exports.postLogout = (req, res, next) => {
   req.logout(() => {
     res.clearCookie('connectID')
@@ -84,13 +79,11 @@ exports.postLogout = (req, res, next) => {
   })
 }
 
-// = 비밀번호 재설정 화면 보여주기
 exports.getResetPassword = (req, res) => {
   const errorMessage = req.flash('errorMessage')
   res.render('auth/reset-password', { pageTitle: 'Reset Password', errorMessage })
 }
 
-// = 비밀번호 재설정 처리하기
 exports.postResetPassword = async (req, res, next) => {
   const validationErrors = validationResult(req)
   if (!validationErrors.isEmpty()) {
@@ -125,7 +118,6 @@ exports.postResetPassword = async (req, res, next) => {
   }
 }
 
-// = 비밀번호 새로 설정 화면 보여주기
 exports.getNewPassword = async (req, res) => {
   const { userId, passwordToken } = req.params
 
@@ -141,7 +133,6 @@ exports.getNewPassword = async (req, res) => {
   })
 }
 
-// = 비밀번호 새로 설정 처리하기
 exports.postNewPassword = async (req, res, next) => {
   try {
     const { userId, passwordToken } = req.params

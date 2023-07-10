@@ -9,21 +9,19 @@ const PostImage = require('../models/postImage.model')
 const User = require('../models/user.model')
 const Comment = require('../models/comment.model')
 
-// = 모든 포스트 가져오기
 exports.getAllPosts = async (req, res) => {
-  res.status(200).render('community/allPosts', { pageTitle: 'all-posts' })
+  res.status.render('community/allPosts', { pageTitle: 'all-posts' })
 }
 
-// = 다음 포스트 가져오기
-exports.getNextPosts = async (req, res) => {
+exports.getNextPosts = async (req, res, next) => {
   try {
     const lastPostId = req.query['last-post-id']
 
     const posts = await Post.findAll({
       order: [['id', 'DESC']],
-      limit: 10,
       attributes: ['title', 'content', 'id', 'createdAt', 'likeCount'],
       where: lastPostId ? { id: { [Op.lt]: lastPostId } } : null,
+      limit: 10,
       include: [
         {
           model: PostImage,
@@ -43,19 +41,17 @@ exports.getNextPosts = async (req, res) => {
       return res.status(204).end()
     }
 
-    return res.status(200).json({ posts, success: true })
+    return res.json({ posts, success: true })
   } catch (error) {
-    return res.status(500).json({ message: '서버 에러가 발생했습니다.', success: false })
+    return next(error)
   }
 }
 
-// = 새 포스트 작성 화면 가져오기
 exports.getCreatePost = (req, res) => {
   const errorMessage = req.flash('errorMessage')
   res.render('community/createPost', { pageTitle: 'create post', errorMessage })
 }
 
-// = 새 포스트 작성 처리하기
 exports.postCreatePost = async (req, res, next) => {
   const validationErrors = validationResult(req)
   if (!validationErrors.isEmpty()) {
@@ -86,8 +82,7 @@ exports.postCreatePost = async (req, res, next) => {
   }
 }
 
-// = 좋아요 처리하기
-exports.patchLike = async (req, res, next) => {
+exports.postLike = async (req, res, next) => {
   try {
     const { postId } = req.params
     const post = await Post.findByPk(postId)
@@ -115,7 +110,6 @@ exports.patchLike = async (req, res, next) => {
   }
 }
 
-// = 포스트 상세 가져오기
 exports.getPost = async (req, res, next) => {
   try {
     const { postId } = req.params
@@ -158,7 +152,6 @@ exports.getPost = async (req, res, next) => {
   }
 }
 
-// = 포스트 삭제 처리하기
 exports.deletePost = async (req, res, next) => {
   try {
     const { postId } = req.params
@@ -166,12 +159,10 @@ exports.deletePost = async (req, res, next) => {
     const post = await Post.findByPk(postId)
 
     if (!post) {
-      res.status(404)
       throw new Error('존재하지 않는 포스트입니다.')
     }
 
     if (post.authorId !== req.user.id) {
-      res.status(403)
       throw new Error('권한이 없습니다.')
     }
 
@@ -188,17 +179,12 @@ exports.deletePost = async (req, res, next) => {
 
     await post.destroy()
 
-    res.status(200).json({ message: '성공적으로 삭제되었습니다.', success: true })
+    res.json({ message: '성공적으로 삭제되었습니다.', success: true })
   } catch (error) {
-    if (res.statusCode === 403) {
-      res.status(403).json({ message: error.message, success: false })
-    } else {
-      next(error)
-    }
+    next(error)
   }
 }
 
-// &
 // exports.getEditPost = async (req, res, next) => {
 //   try {
 //     const { postId } = req.params
@@ -220,7 +206,6 @@ exports.deletePost = async (req, res, next) => {
 //   }
 // }
 
-// = 새 댓글 작성 처리하기
 exports.postComments = async (req, res, next) => {
   try {
     const { postId } = req.params
@@ -246,7 +231,6 @@ exports.postComments = async (req, res, next) => {
   }
 }
 
-// = 댓글 삭제 처리하기
 exports.deleteComment = async (req, res, next) => {
   try {
     const { postId, commentId } = req.params

@@ -5,20 +5,19 @@ class Post extends Sequelize.Model {
     Post.init(
       {
         title: {
-          type: DataTypes.STRING(50),
+          type: DataTypes.STRING,
           allowNull: false,
+          comment: '포스트의 제목',
         },
         content: {
-          type: DataTypes.STRING(250),
+          type: DataTypes.STRING,
           allowNull: false,
-        },
-        authorId: {
-          type: DataTypes.INTEGER,
-          allowNull: false,
+          comment: '포스트의 내용',
         },
         likeCount: {
           type: DataTypes.INTEGER.UNSIGNED,
           defaultValue: 0,
+          comment: '해당 포스트의 좋아요 수',
         },
       },
       {
@@ -33,11 +32,8 @@ class Post extends Sequelize.Model {
 
   static associate(db) {
     db.Post.hasMany(db.PostImage, { foreignKey: 'postId', sourceKey: 'id' })
-
-    db.Post.belongsTo(db.User, { foreignKey: 'authorId', sourceKey: 'id' })
-
-    db.Post.belongsToMany(db.User, { through: 'Like', as: 'Liker' })
-
+    db.Post.belongsTo(db.User, { foreignKey: 'authorId', targetKey: 'id' })
+    db.Post.belongsToMany(db.User, { through: 'Like', as: 'Liker', foreignKey: 'postId' })
     db.Post.hasMany(db.Comment, { foreignKey: 'postId', sourceKey: 'id' })
   }
 }

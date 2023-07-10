@@ -1,5 +1,5 @@
 const express = require('express')
-const { body: bodyValidator, param: paramValidator } = require('express-validator')
+const { body: bodyValidator } = require('express-validator')
 
 const communityController = require('../controllers/community.controller')
 
@@ -11,16 +11,12 @@ const uploadPostImg = multerConfig(postImgFolderName)
 
 const router = express.Router()
 
-// = 모든 포스트 가져오기
 router.get('/all-posts', communityController.getAllPosts)
 
-// = 다음 포스트 가져오기
 router.get('/next-posts', communityController.getNextPosts)
 
-// = 새 포스트 작성 화면 가져오기
 router.get('/create-post', isLoggedIn, communityController.getCreatePost)
 
-// = 새 포스트 작성 처리하기
 router.post(
   '/create-post',
   isLoggedIn,
@@ -46,27 +42,16 @@ router.post(
   communityController.postCreatePost
 )
 
-// = 좋아요 처리하기
-router.patch('/like/:postId', isLoggedIn, paramValidator('postId').notEmpty(), communityController.patchLike)
+router.post('/like/:postId', isLoggedIn, communityController.postLike)
 
-// = 포스트 상세 가져오기
-router.get('/post/:postId', paramValidator('postId').notEmpty(), communityController.getPost)
+router.get('/post/:postId', communityController.getPost)
 
-// = 포스트 삭제 처리하기
-router.delete('/:postId', isLoggedIn, paramValidator('postId').notEmpty(), communityController.deletePost)
+router.delete('/:postId', isLoggedIn, communityController.deletePost)
 
-// = 포스트 수정 화면 가져오기
-// router.get('/edit/:postId', isLoggedIn, paramValidator('postId').notEmpty(), communityController.getEditPost)
+// router.get('/edit/:postId', isLoggedIn,  communityController.getEditPost)
 
-// = 새 댓글 작성 처리하기
-router.post('/comment/:postId', isLoggedIn, paramValidator('postId').notEmpty(), communityController.postComments)
+router.post('/comment/:postId', isLoggedIn, communityController.postComments)
 
-// = 댓글 삭제 처리하기
-router.delete(
-  '/comment/:postId/:commentId',
-  isLoggedIn,
-  [paramValidator('postId').notEmpty(), paramValidator('commentId').notEmpty()],
-  communityController.deleteComment
-)
+router.delete('/comment/:postId/:commentId', isLoggedIn, communityController.deleteComment)
 
 module.exports = router

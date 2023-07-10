@@ -7,18 +7,17 @@ class PostImage extends Sequelize.Model {
         originalname: {
           type: DataTypes.STRING,
           allowNull: false,
+          comment: '이미지의 기존 이름',
         },
         postImgUrl: {
           type: DataTypes.STRING,
           allowNull: false,
+          comment: '이미지의 URL',
         },
         postImgKey: {
           type: DataTypes.STRING,
           allowNull: false,
-        },
-        postId: {
-          type: DataTypes.INTEGER,
-          primaryKey: false,
+          comment: 's3에 저장된 이미지의 키',
         },
       },
       {

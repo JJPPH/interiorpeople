@@ -8,12 +8,10 @@ require('dotenv').config()
 
 const User = require('../models/user.model')
 
-// = 유저 프로필 이미지 변경 화면 보여주기
 exports.getEditProfile = async (req, res) => {
   res.render('my-page/edit-profile', { pageTitle: 'edit profile' })
 }
 
-// = 유저 프로필 이미지 변경 처리하기
 exports.patchEditProfile = async (req, res, next) => {
   try {
     const profileImg = req.file
@@ -39,12 +37,10 @@ exports.patchEditProfile = async (req, res, next) => {
   }
 }
 
-// = 유저 계정 관리 화면 보여주기
 exports.getEditAccount = async (req, res) => {
   res.render('my-page/edit-account', { pageTitle: 'edit account' })
 }
 
-// = 유저 계정의 이름 변경 처리하기
 exports.patchEditUsername = async (req, res, next) => {
   try {
     const validationErrors = validationResult(req)
@@ -62,7 +58,6 @@ exports.patchEditUsername = async (req, res, next) => {
   }
 }
 
-// = 유저 계정의 이메일 변경 처리하기
 exports.patchEditEmail = async (req, res, next) => {
   try {
     const validationErrors = validationResult(req)
@@ -80,7 +75,6 @@ exports.patchEditEmail = async (req, res, next) => {
   }
 }
 
-// = 유저 게정의 비밀번호 변경 처리하기
 exports.patchEditPassword = async (req, res, next) => {
   try {
     const validationErrors = validationResult(req)
@@ -106,12 +100,10 @@ exports.patchEditPassword = async (req, res, next) => {
   }
 }
 
-// = 유저 계정 탈퇴 화면 보여주기
 exports.getDeleteAccount = async (req, res) => {
   res.render('my-page/delete-account', { pageTitle: 'delete account' })
 }
 
-// = 유저 계정 탈퇴 처리하기
 exports.deleteAccount = async (req, res, next) => {
   try {
     const user = await User.findByPk(req.user.id)
@@ -141,7 +133,6 @@ exports.deleteAccount = async (req, res, next) => {
   }
 }
 
-// = 나의 이미지 보여주기
 // exports.getMyImages = async (req, res, next) => {
 //   try {
 //     const images = await ImageConversion.find({ userId: req.user.id }).select(['_id', 'imageFolderName'])

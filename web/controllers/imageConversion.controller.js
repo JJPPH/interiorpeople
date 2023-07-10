@@ -23,13 +23,11 @@ const interiorImageUpload = multer({
   }),
 })
 
-// = 변환하고자 하는 이미지 업로드 화면 보여주기
 exports.getInteriorImageUpload = (req, res) => {
   const errorMessage = req.flash('errorMessage')
   res.render('image-conversion/interior-image-upload', { pageTitle: '변환할 인테리어 이미지 업로드', errorMessage })
 }
 
-// = 변환하고자 하는 이미지 업로드 및 가구 세그멘테이션 처리
 exports.postSegmentation = async (req, res, next) => {
   try {
     interiorImageUpload.single('image')(req, res, (err) => {
@@ -142,7 +140,6 @@ exports.postSegmentation = async (req, res, next) => {
   }
 }
 
-// = local style transfer 처리
 exports.postLocalTransfer = async (req, res, next) => {
   try {
     const userId = req.user.id

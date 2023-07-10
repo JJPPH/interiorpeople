@@ -5,24 +5,14 @@ class Comment extends Sequelize.Model {
     Comment.init(
       {
         commentContent: {
-          type: DataTypes.STRING(100),
+          type: DataTypes.STRING,
           allowNull: false,
-        },
-        commenterId: {
-          type: DataTypes.INTEGER,
-          allowNull: false,
-        },
-        postId: {
-          type: DataTypes.INTEGER,
-          allowNull: false,
+          comment: '댓글의 내용',
         },
       },
       {
         sequelize,
-        timeStamps: false,
-        underscored: false,
-        modelName: 'Comment',
-        tableName: 'comments',
+        timeStamps: true,
         paranoid: false,
         charset: 'utf8',
         collate: 'utf8_general_ci',

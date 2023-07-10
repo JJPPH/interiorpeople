@@ -19,10 +19,8 @@ const { isLoggedIn, isNotLoggedIn } = require('../middlewares/authentication.mid
 
 const router = express.Router()
 
-// = 로그인 화면 보여주기
 router.get('/login', isNotLoggedIn, getLogin)
 
-// = 로그인 처리하기
 router.post(
   '/login',
   isNotLoggedIn,
@@ -33,10 +31,8 @@ router.post(
   postLogin
 )
 
-// = 회원가입 화면 보여주기
 router.get('/signup', isNotLoggedIn, getSignup)
 
-// = 회원가입 처리하기
 router.post(
   '/signup',
   isNotLoggedIn,
@@ -67,13 +63,10 @@ router.post(
   postSignup
 )
 
-// = 로그아웃 처리하기
 router.post('/logout', isLoggedIn, postLogout)
 
-// = 비밀번호 재설정 화면 보여주기
 router.get('/reset-password', isNotLoggedIn, getResetPassword)
 
-// = 비밀번호 재설정 처리하기
 router.post(
   '/reset-password',
   isNotLoggedIn,
@@ -91,10 +84,8 @@ router.post(
   postResetPassword
 )
 
-// = 비밀번호 새로 설정 화면 보여주기
 router.get('/new-password/:userId/:passwordToken', isNotLoggedIn, getNewPassword)
 
-// = 비밀번호 새로 설정 처리하기
 router.post(
   '/new-password/:userId/:passwordToken',
   isNotLoggedIn,

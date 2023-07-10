@@ -19,27 +19,21 @@ const uploadUserProfileImg = multerConfig('userProfileImg')
 
 const router = express.Router()
 
-// = 유저 프로필 이미지 변경 화면 보여주기
 router.get('/edit-profile', isLoggedIn, getEditProfile)
 
-// = 유저 프로필 이미지 변경 처리하기
 router.patch('/edit-profile', isLoggedIn, uploadUserProfileImg.single('profile-img'), patchEditProfile)
 
-// = 유저 계정 관리 화면 보여주기
 router.get('/edit-account', isLoggedIn, getEditAccount)
 
-// = 유저 계정의 이름 변경 처리하기
 router.patch(
   '/edit-username',
   isLoggedIn,
-  body('newUsername').trim().notEmpty().isLength({ min: 1, max: 25 }).withMessage('올바른 이름을 입력해주세요.'),
+  body('newUsername').trim().notEmpty().isLength({ min: 1 }).withMessage('올바른 이름을 입력해주세요.'),
   patchEditUsername
 )
 
-// = 유저 계정의 이메일 변경 처리하기
 router.patch('/edit-email', isLoggedIn, body('newEmail').trim().isEmail().withMessage('올바른 이메일을 입력해주세요.'), patchEditEmail)
 
-// = 유저 게정의 비밀번호 변경 처리하기
 router.patch(
   '/edit-password',
   isLoggedIn,
@@ -60,10 +54,8 @@ router.patch(
   patchEditPassword
 )
 
-// = 유저 계정 탈퇴 화면 보여주기
 router.get('/delete-account', isLoggedIn, getDeleteAccount)
 
-// = 유저 계정 탈퇴 처리하기
 router.delete('/delete-account', isLoggedIn, deleteAccount)
 
 module.exports = router

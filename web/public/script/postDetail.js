@@ -62,7 +62,7 @@ likeButton.addEventListener('click', async () => {
   const { postId } = likeButton.dataset
   try {
     const response = await fetch(`/community/like/${postId}`, {
-      method: 'PATCH',
+      method: 'POST',
     })
 
     const responseData = await response.json()
@@ -144,7 +144,6 @@ const refreshComments = (userId, comments) => {
       })
     }
   } catch (error) {
-    // alert(error.message)
     alert('잠시 후 다시 시도해 주시길 바랍니다.')
   }
 }
@@ -167,7 +166,6 @@ for (let i = 0; i < deleteCommentButtons.length; i += 1) {
         throw new Error(responseData.message)
       }
     } catch (error) {
-      // alert(error.message)
       alert('잠시 후 다시 시도해 주시길 바랍니다.')
     }
   })
@@ -198,7 +196,6 @@ createCommentButton.addEventListener('click', async () => {
       throw new Error(responseData.message)
     }
   } catch (error) {
-    // alert(error.message)
     alert('잠시 후 다시 시도해 주시길 바랍니다.')
   }
 })

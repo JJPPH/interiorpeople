@@ -92,7 +92,7 @@ app.use((req, res, next) => {
 })
 
 if (process.env.NODE_ENV === 'development') {
-  // app.use(autoLogin)
+  app.use(autoLogin)
 }
 
 app.use('/auth', authRouter)
